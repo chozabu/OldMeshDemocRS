@@ -207,7 +207,7 @@ void PostedListDialog::showVotes(RsGxsGrpMsgIdPair msgID)
 	msgIds.push_back(msgID);
 	uint32_t token;
 	//mMeshDemocQueue->requestMsgInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, grpIds, TOKEN_USER_TYPE_VOTE);
-	mPostedQueue->requestMsgRelatedInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, msgIds, TOKENREQ_MSGINFO);//TOKEN_USER_TYPE_VOTE);
+	mPostedQueue->requestMsgRelatedInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, msgIds, TOKENREQ_MSGRELATEDINFO);//TOKEN_USER_TYPE_VOTE);
 	//mMeshDemocQueue->queueRequest(token, 0, RS_TOKREQ_ANSTYPE_DATA, TOKENREQ_MSGINFO);
 }
 
@@ -937,7 +937,7 @@ void PostedListDialog::loadRequest(const TokenQueue *queue, const TokenRequest &
 						break;
 				}
 				break;
-		case TOKENREQ_MSGINFO:
+		case TOKENREQ_MSGRELATEDINFO:
 			switch(req.mAnsType)
 			{
 			case RS_TOKREQ_ANSTYPE_DATA:
