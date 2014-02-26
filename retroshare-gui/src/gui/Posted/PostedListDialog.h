@@ -84,6 +84,7 @@ private slots:
 	
 	void todo();
 
+	void showVotes(RsGxsGrpMsgIdPair msgID);
 protected:
 	virtual void updateDisplay(bool complete);
 
@@ -161,6 +162,7 @@ private:
 
 	/* UI - from Designer */
 	Ui::PostedListDialog ui;
+	void showVotesFromToken(u_int32_t token);
 };
 
 #endif

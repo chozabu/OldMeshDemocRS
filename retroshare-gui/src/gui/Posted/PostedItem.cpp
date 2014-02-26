@@ -55,6 +55,7 @@ void PostedItem::setup()
 	connect(commentButton, SIGNAL( clicked()), this, SLOT(loadComments()));
 	connect(voteUpButton, SIGNAL(clicked()), this, SLOT(makeUpVote()));
 	connect(voteDownButton, SIGNAL(clicked()), this, SLOT( makeDownVote()));
+	connect(votesButton, SIGNAL(clicked()), this, SLOT( showVotes()));
 }
 
 void PostedItem::loadMessage(const uint32_t &token)
@@ -197,6 +198,14 @@ void PostedItem::makeUpVote()
 	voteDownButton->setEnabled(false);
 
 	emit vote(msgId, true);
+}
+void PostedItem::showVotes()
+{
+	RsGxsGrpMsgIdPair msgId;
+	msgId.first = mPost.mMeta.mGroupId;
+	msgId.second = mPost.mMeta.mMsgId;
+
+	emit votesReq(msgId);
 }
 
 void PostedItem::loadComments()

@@ -85,6 +85,7 @@ virtual ~RsPosted() { return; }
 virtual bool getGroupData(const uint32_t &token, std::vector<RsPostedGroup> &groups) = 0;
 virtual bool getPostData(const uint32_t &token, std::vector<RsPostedPost> &posts) = 0;
 virtual bool getRelatedPosts(const uint32_t &token, std::vector<RsPostedPost> &posts) = 0;
+	virtual bool getRelatedVotes(const uint32_t &token, std::multimap<RsGxsMessageId, RsGxsVote *> &voteMap) = 0;
 
 	    /* From RsGxsCommentService */
 //virtual bool getCommentData(const uint32_t &token, std::vector<RsGxsComment> &comments) = 0;

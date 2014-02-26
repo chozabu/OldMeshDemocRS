@@ -47,9 +47,11 @@ private slots:
 	void loadComments();
 	void makeUpVote();
 	void makeDownVote();
+	void showVotes();
 
 signals:
 	void vote(const RsGxsGrpMsgIdPair& msgId, bool up);
+	void votesReq(const RsGxsGrpMsgIdPair& msgId);
 
 protected:
 	virtual void loadMessage(const uint32_t &token);

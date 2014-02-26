@@ -198,6 +198,43 @@ void PostedListDialog::groupListCustomPopupMenu(QPoint /*point*/)
 
 	contextMnu.exec(QCursor::pos());
 }
+void PostedListDialog::showVotes(RsGxsGrpMsgIdPair msgID)
+{
+
+	RsTokReqOptions opts;
+	opts.mReqType = GXS_REQUEST_TYPE_MSG_RELATED_DATA;
+	std::vector<RsGxsGrpMsgIdPair> msgIds;
+	msgIds.push_back(msgID);
+	uint32_t token;
+	//mMeshDemocQueue->requestMsgInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, grpIds, TOKEN_USER_TYPE_VOTE);
+	mPostedQueue->requestMsgRelatedInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, msgIds, TOKENREQ_MSGINFO);//TOKEN_USER_TYPE_VOTE);
+	//mMeshDemocQueue->queueRequest(token, 0, RS_TOKREQ_ANSTYPE_DATA, TOKENREQ_MSGINFO);
+}
+
+void PostedListDialog::showVotesFromToken(u_int32_t token)
+{
+
+	QString messageString;
+	std::multimap<RsGxsMessageId, RsGxsVote *> voteMap;
+	rsPosted->getRelatedVotes(token, voteMap);
+	std::multimap<RsGxsMessageId, RsGxsVote *>::iterator it;
+	messageString.append(QString("start\n"));
+	messageString.append(QString::number(voteMap.size()));
+	messageString.append(QString(" votes \n"));
+
+	for (it = voteMap.begin(); it != voteMap.end(); it++){
+		if (it->second->mVoteType == GXS_VOTE_UP)
+		{
+			messageString.append(QString("up\n"));
+		}
+		else
+		{
+			messageString.append(QString("down\n"));
+		}
+	}
+	messageString.append(QString("end\n"));
+	QMessageBox::information(NULL, "votes!", messageString);
+}
 
 void PostedListDialog::newPost()
 {
@@ -592,6 +629,7 @@ void PostedListDialog::loadPost(const RsPostedPost &post)
 {
 	PostedItem *item = new PostedItem(this, 0, post, true);
 	connect(item, SIGNAL(vote(RsGxsGrpMsgIdPair,bool)), this, SLOT(submitVote(RsGxsGrpMsgIdPair,bool)));
+	connect(item, SIGNAL(votesReq(RsGxsGrpMsgIdPair)), this, SLOT(showVotes(RsGxsGrpMsgIdPair)));
 	mPosts.insert(post.mMeta.mMsgId, item);
 	//QLayout *alayout = ui.scrollAreaWidgetContents->layout();
 	//alayout->addWidget(item);
@@ -899,6 +937,16 @@ void PostedListDialog::loadRequest(const TokenQueue *queue, const TokenRequest &
 						break;
 				}
 				break;
+		case TOKENREQ_MSGINFO:
+			switch(req.mAnsType)
+			{
+			case RS_TOKREQ_ANSTYPE_DATA:
+				showVotesFromToken(req.mToken);
+				break;
+				default:
+					std::cerr << "Error, unexpected anstype:" << req.mAnsType << std::endl;
+					break;
+			}
 			case TOKEN_USER_TYPE_POST_MOD:
 				switch(req.mAnsType)
 				{
