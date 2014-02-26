@@ -203,17 +203,16 @@ void PostedListDialog::showVotes(RsGxsGrpMsgIdPair msgID)
 
 	RsTokReqOptions opts;
 	opts.mReqType = GXS_REQUEST_TYPE_MSG_RELATED_DATA;
+	opts.mOptions = RS_TOKREQOPT_MSG_THREAD | RS_TOKREQOPT_MSG_LATEST;
 	std::vector<RsGxsGrpMsgIdPair> msgIds;
 	msgIds.push_back(msgID);
 	uint32_t token;
-	//mMeshDemocQueue->requestMsgInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, grpIds, TOKEN_USER_TYPE_VOTE);
-	mPostedQueue->requestMsgRelatedInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, msgIds, TOKENREQ_MSGRELATEDINFO);//TOKEN_USER_TYPE_VOTE);
+	mPostedQueue->requestMsgRelatedInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, msgIds, TOKENREQ_MSGRELATEDINFO);
 	//mMeshDemocQueue->queueRequest(token, 0, RS_TOKREQ_ANSTYPE_DATA, TOKENREQ_MSGINFO);
 }
 
 void PostedListDialog::showVotesFromToken(u_int32_t token)
 {
-
 	QString messageString;
 	std::multimap<RsGxsMessageId, RsGxsVote *> voteMap;
 	rsPosted->getRelatedVotes(token, voteMap);
