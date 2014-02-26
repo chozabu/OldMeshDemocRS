@@ -269,6 +269,68 @@ bool p3GxsCommentService::getGxsCommentData(const uint32_t &token, std::vector<R
 
 
 
+bool p3GxsCommentService::getGxsRelatedVotes(const uint32_t &token, std::multimap<RsGxsMessageId, RsGxsVote *> &voteMap)
+{
+	std::cerr << "\n\n---\n\np3GxsCommentService::getGxsRelatedVotes()";
+	std::cerr << std::endl;
+	std::cerr << "Token: " << token;
+	std::cerr << std::endl;
+
+	GxsMsgRelatedDataMap msgData;
+	bool ok = mExchange->getMsgRelatedData(token, msgData);
+
+
+	std::cerr << "msgData.size(): " << msgData.size();
+	std::cerr << std::endl;
+
+	if(ok)
+	{
+		GxsMsgRelatedDataMap::iterator mit = msgData.begin();
+
+		for(; mit != msgData.end();  mit++)
+		{
+			std::cerr << "mit";
+			std::cerr << std::endl;
+			std::vector<RsGxsMsgItem*>& msgItems = mit->second;
+			std::vector<RsGxsMsgItem*>::iterator vit = msgItems.begin();
+
+			for(; vit != msgItems.end(); vit++)
+			{
+				std::cerr << "vit";
+				std::cerr << std::endl;
+				RsGxsCommentItem* item = dynamic_cast<RsGxsCommentItem*>(*vit);
+
+				if(item)
+				{
+					std::cerr << "Comment, deleting!" << std::endl;
+					delete item;
+				}
+				else
+				{
+					RsGxsVoteItem* vote = dynamic_cast<RsGxsVoteItem*>(*vit);
+					if (vote)
+					{
+						voteMap.insert(std::make_pair(vote->meta.mParentId, &(vote->mMsg)));
+						std::cerr << "!!" << std::endl;
+						std::cerr << "GOT A VOTE!" << std::endl;
+						std::cerr << "!!" << std::endl;
+					}
+					else
+					{
+						std::cerr << "Not a Comment or Vote, deleting!" << std::endl;
+						delete *vit;
+					}
+				}
+			}
+		}
+	} else {
+		std::cerr << "nope failed on:";
+		std::cerr << std::endl;
+		std::cerr << "mExchange->getMsgRelatedData(token, msgData);\n\n\n\n\n";
+	}
+
+	return ok;
+}
 
 bool p3GxsCommentService::getGxsRelatedComments(const uint32_t &token, std::vector<RsGxsComment> &comments)
 {
