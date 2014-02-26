@@ -203,7 +203,7 @@ void PostedListDialog::showVotes(RsGxsGrpMsgIdPair msgID)
 
 	RsTokReqOptions opts;
 	opts.mReqType = GXS_REQUEST_TYPE_MSG_RELATED_DATA;
-	opts.mOptions = RS_TOKREQOPT_MSG_THREAD | RS_TOKREQOPT_MSG_LATEST;
+	opts.mOptions = RS_TOKREQOPT_MSG_PARENT | RS_TOKREQOPT_MSG_LATEST;
 	std::vector<RsGxsGrpMsgIdPair> msgIds;
 	msgIds.push_back(msgID);
 	uint32_t token;
