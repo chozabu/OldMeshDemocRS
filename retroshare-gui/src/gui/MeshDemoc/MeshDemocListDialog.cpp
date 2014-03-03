@@ -28,6 +28,7 @@
 #include "MeshDemocDialog.h"
 #include "MeshDemocItem.h"
 #include "MeshDemocUserTypes.h"
+#include "SelectRepresentitiveDialog.h"
 
 #include <iostream>
 
@@ -223,8 +224,8 @@ void MeshDemocListDialog::newRepresentitive()
 	if (mCurrTopicId.empty()) {
         return;
     }
-    //SelectRepresentitiveDialog srd;
-	//srd.exec();
+    SelectRepresentitiveDialog srd;
+	srd.exec();
 }
 
 void MeshDemocListDialog::showVotes(RsGxsGrpMsgIdPair msgID)
