@@ -100,7 +100,7 @@ virtual void setMessageReadStatus(uint32_t& token, const RsGxsGrpMsgIdPair& msgI
 
 	p3GxsCommentService *mCommentService;	
 
-	private:
+	protected:
 
 static uint32_t postBaseAuthenPolicy();
 

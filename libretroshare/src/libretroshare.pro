@@ -124,7 +124,10 @@ PUBLIC_HEADERS =	retroshare/rsdisc.h \
 
 HEADERS += plugins/pluginmanager.h \
 		plugins/dlfcn_win32.h \
-		serialiser/rspluginitems.h
+		serialiser/rspluginitems.h \
+    services/p3meshdemoc.h \
+    serialiser/rsmeshdemocitems.h \
+    retroshare/rsmeshdemoc.h
 
 HEADERS += $$PUBLIC_HEADERS
 
@@ -461,7 +464,9 @@ SOURCES +=	dbase/cachestrapper.cc \
 			dbase/fimonitor.cc \
 			dbase/findex.cc \
 			dbase/fistore.cc \
-			dbase/rsexpr.cc
+			dbase/rsexpr.cc \
+    services/p3meshdemoc.cpp \
+    serialiser/rsmeshdemocitems.cpp
 
 
 SOURCES +=	ft/ftchunkmap.cc \

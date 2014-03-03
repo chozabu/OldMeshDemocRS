@@ -37,6 +37,7 @@
 #include "gui/Posted/PostedDialog.h"
 #include "gui/gxsforums/GxsForumsDialog.h"
 #include "gui/gxschannels/ChannelDialog.h"
+#include "gui/MeshDemoc/MeshDemocDialog.h"
 
 // THESE HAVE TO BE CONVERTED TO VEG FORMAT
 #if USE_VEG_SERVICE
@@ -129,6 +130,11 @@ ApplicationWindow::ApplicationWindow(QWidget* parent, Qt::WindowFlags flags)
     ui.stackPages->add(gxschannelDialog = new ChannelDialog(ui.stackPages),
                       createPageAction(QIcon(IMAGE_GXSCHANNELS), tr("GxsChannels"), grp));
     gxschannelDialog->setup();
+
+	MeshDemocDialog *meshDemocDialog = NULL;
+    ui.stackPages->add(meshDemocDialog = new MeshDemocDialog(ui.stackPages),
+                      createPageAction(QIcon(IMAGE_LIBRARY), tr("Mesh Democracy"), grp));
+	meshDemocDialog->setup();
 
 // THESE HAVE TO BE CONVERTED TO VEG FORMAT
 #if USE_VEG_SERVICE

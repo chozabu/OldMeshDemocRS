@@ -54,6 +54,7 @@ class p3GxsForums;
 class p3GxsChannels;
 class p3Wiki;
 class p3Posted;
+class p3MeshDemoc;
 class p3PhotoService;
 class p3Wire;
 
@@ -185,6 +186,7 @@ class RsServer: public RsControl, public RsThread
 		p3IdService *mGxsIdService;
 		p3GxsForums *mGxsForums;
 		p3GxsChannels *mGxsChannels;
+		p3MeshDemoc *mMeshDemoc;
 		p3Wire *mWire;
 
 		/* Config */

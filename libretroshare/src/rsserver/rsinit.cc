@@ -887,6 +887,7 @@ RsGRouter *rsGRouter = NULL ;
 #include "services/p3gxscircles.h"
 #include "services/p3wiki.h"
 #include "services/p3posted.h"
+#include "services/p3meshdemoc.h"
 #include "services/p3photoservice.h"
 #include "services/p3gxsforums.h"
 #include "services/p3gxschannels.h"
@@ -1460,6 +1461,24 @@ int RsServer::StartupRetroShare()
                         RS_SERVICE_GXSV2_TYPE_POSTED, posted_ds, nxsMgr, mPosted, mGxsIdService, mGxsCircles);
 
 
+		/**** MeshDemoc GXS service ****/
+
+
+
+        RsGeneralDataService* meshDemoc_ds = new RsDataService(currGxsDir + "/", "meshDemoc_db",
+                                                            RS_SERVICE_GXSV2_TYPE_MESH_DEMOC, NULL, RsInitConfig::gxs_passwd);
+
+#ifndef GXS_DEV_TESTNET // NO RESET, OR DUMMYDATA for TESTNET
+        meshDemoc_ds->resetDataStore(); //TODO: remove, new service data per RS session, for testing
+#endif
+
+        mMeshDemoc = new p3MeshDemoc(meshDemoc_ds, NULL, mGxsIdService);
+
+		// create GXS photo service
+        RsGxsNetService* meshDemoc_ns = new RsGxsNetService(
+                        RS_SERVICE_GXSV2_TYPE_MESH_DEMOC, meshDemoc_ds, nxsMgr, mMeshDemoc, mGxsIdService, mGxsCircles);
+
+
         /**** Wiki GXS service ****/
 
 
@@ -1533,7 +1552,8 @@ int RsServer::StartupRetroShare()
         pqih->addService(gxsid_ns);
         pqih->addService(gxscircles_ns);
         pqih->addService(photo_ns);
-        pqih->addService(posted_ns);
+		pqih->addService(posted_ns);
+		pqih->addService(meshDemoc_ns);
         pqih->addService(wiki_ns);
         pqih->addService(gxsforums_ns);
         pqih->addService(gxschannels_ns);
@@ -1638,6 +1658,7 @@ int RsServer::StartupRetroShare()
 	mConfigMgr->addConfiguration("gxschannels.cfg", gxschannels_ns);
 	mConfigMgr->addConfiguration("gxscircles.cfg", gxscircles_ns);
 	mConfigMgr->addConfiguration("posted.cfg", posted_ns);
+	mConfigMgr->addConfiguration("meshdemoc.cfg", meshDemoc_ns);
 	mConfigMgr->addConfiguration("wire.cfg", wire_ns);
 	mConfigMgr->addConfiguration("wiki.cfg", wiki_ns);
 	mConfigMgr->addConfiguration("photo.cfg", photo_ns);
@@ -1749,6 +1770,7 @@ int RsServer::StartupRetroShare()
 	rsGxsCircles = mGxsCircles;
 	rsWiki = mWiki;
 	rsPosted = mPosted;
+	rsMeshDemoc = mMeshDemoc;
 	rsPhoto = mPhoto;
 	rsGxsForums = mGxsForums;
 	rsGxsChannels = mGxsChannels;
@@ -1759,6 +1781,7 @@ int RsServer::StartupRetroShare()
 	createThread(*mGxsCircles);
 	createThread(*mPhoto);
 	createThread(*mPosted);
+	createThread(*mMeshDemoc);
 	createThread(*mWiki);
 	createThread(*mWire);
 	createThread(*mGxsForums);
@@ -1769,6 +1792,7 @@ int RsServer::StartupRetroShare()
 	createThread(*gxscircles_ns);
 	createThread(*photo_ns);
 	createThread(*posted_ns);
+	createThread(*meshDemoc_ns);
 	createThread(*wiki_ns);
 	createThread(*wire_ns);
 	createThread(*gxsforums_ns);

@@ -493,6 +493,13 @@ HEADERS +=  rshare.h \
             gui/channels/ShareKey.h \
             gui/GetStartedDialog.h \
             gui/RttStatistics.h \
+    gui/MeshDemoc/MeshDemocCreatePostDialog.h \
+    gui/MeshDemoc/MeshDemocDialog.h \
+    gui/MeshDemoc/MeshDemocUserTypes.h \
+    gui/MeshDemoc/MeshDemocGroupDialog.h \
+    gui/MeshDemoc/MeshDemocItem.h \
+    gui/MeshDemoc/MeshDemocListDialog.h \
+    gui/common/RecurGroupTreeWidget.h
 
 #            gui/ForumsDialog.h \
 #            gui/forums/ForumDetails.h \
@@ -600,6 +607,9 @@ FORMS +=    gui/StartDialog.ui \
             gui/channels/ShareKey.ui \
             gui/GetStartedDialog.ui \
             gui/RttStatistics.ui \
+    gui/MeshDemoc/MeshDemocCreatePostDialog.ui \
+    gui/MeshDemoc/MeshDemocListDialog.ui \
+    gui/MeshDemoc/MeshDemocItem.ui
 
 #            gui/ForumsDialog.ui \
 #            gui/forums/CreateForum.ui \
@@ -805,6 +815,11 @@ SOURCES +=  main.cpp \
             gui/channels/ShareKey.cpp \
             gui/GetStartedDialog.cpp \
             gui/RttStatistics.cpp \
+    gui/MeshDemoc/MeshDemocCreatePostDialog.cpp \
+    gui/MeshDemoc/MeshDemocGroupDialog.cpp \
+    gui/MeshDemoc/MeshDemocListDialog.cpp \
+    gui/MeshDemoc/MeshDemocItem.cpp \
+    gui/common/RecurGroupTreeWidget.cpp
 
 #            gui/ForumsDialog.cpp \
 #            gui/forums/ForumDetails.cpp \
@@ -824,7 +839,8 @@ SOURCES +=  main.cpp \
 #            gui/feeds/ChanMsgItem.cpp \
 #            gui/settings/ForumPage.cpp \
 
-RESOURCES += gui/images.qrc lang/lang.qrc gui/help/content/content.qrc
+RESOURCES += gui/images.qrc lang/lang.qrc gui/help/content/content.qrc \
+    gui/MeshDemoc/MeshDemoc_images.qrc
 
 TRANSLATIONS +=  \
             lang/retroshare_ca_ES.ts \
@@ -1227,3 +1243,29 @@ gxsgui {
 	
 	
 }
+
+OTHER_FILES += \
+    gui/MeshDemoc/images/hot_24.png \
+    gui/MeshDemoc/images/hot_32.png \
+    gui/MeshDemoc/images/hot_48.png \
+    gui/MeshDemoc/images/hot_64.png \
+    gui/MeshDemoc/images/hot_128.png \
+    gui/MeshDemoc/images/hot_256.png \
+    gui/MeshDemoc/images/new_24.png \
+    gui/MeshDemoc/images/new_32.png \
+    gui/MeshDemoc/images/new_48.png \
+    gui/MeshDemoc/images/new_64.png \
+    gui/MeshDemoc/images/new_128.png \
+    gui/MeshDemoc/images/posted_16.png \
+    gui/MeshDemoc/images/posted_24.png \
+    gui/MeshDemoc/images/posted_32.png \
+    gui/MeshDemoc/images/posted_48.png \
+    gui/MeshDemoc/images/posted_64.png \
+    gui/MeshDemoc/images/posted_128.png \
+    gui/MeshDemoc/images/posted_256.png \
+    gui/MeshDemoc/images/posted_add_24.png \
+    gui/MeshDemoc/images/posted_add_32.png \
+    gui/MeshDemoc/images/posted_add_48.png \
+    gui/MeshDemoc/images/posted_add_64.png \
+    gui/MeshDemoc/images/posted_add_128.png \
+    gui/MeshDemoc/images/posted_add_256.png
