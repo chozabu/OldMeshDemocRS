@@ -196,8 +196,37 @@ void MeshDemocListDialog::groupListCustomPopupMenu(QPoint /*point*/)
 	action = contextMnu.addAction(QIcon(IMAGE_EDIT), tr("Edit Topic Details"), this, SLOT(editTopic()));
 	action->setEnabled (!mCurrTopicId.empty() && IS_GROUP_ADMIN(subscribeFlags));
 
+	contextMnu.addSeparator();
+
+	action = contextMnu.addAction(QIcon(IMAGE_FOLDERGREEN), tr("New Child-Group"), this, SLOT(newSubTopic()));
+	action->setEnabled(isSubscribed);
+	action = contextMnu.addAction(QIcon(IMAGE_FOLDER), tr("Select Representitive"), this, SLOT(newRepresentitive()));
+	action->setEnabled(isSubscribed);
+
 	contextMnu.exec(QCursor::pos());
 }
+
+void MeshDemocListDialog::newSubTopic()
+{
+    std::cerr << "mCurrTopicId: " << mCurrTopicId << std::endl;
+	if (mCurrTopicId.empty()) {
+        return;
+    }
+    MeshDemocGroupDialog cf (mMeshDemocQueue, this);
+    cf.setParentLabel(mCurrTopicId.c_str());
+    cf.exec ();
+
+}
+void MeshDemocListDialog::newRepresentitive()
+{
+    std::cerr << "mCurrTopicId: " << mCurrTopicId << std::endl;
+	if (mCurrTopicId.empty()) {
+        return;
+    }
+    //SelectRepresentitiveDialog srd;
+	//srd.exec();
+}
+
 void MeshDemocListDialog::showVotes(RsGxsGrpMsgIdPair msgID)
 {
 
@@ -996,7 +1025,7 @@ void MeshDemocListDialog::loadRequest(const TokenQueue *queue, const TokenReques
 /**************************************************************************************/
 /**************************** Groups **********************/
 
-void MeshDemocListDialog::groupInfoToGroupItemInfo(const RsGroupMetaData &groupInfo, GroupItemInfo &groupItemInfo)
+void MeshDemocListDialog::groupInfoToGroupItemInfo(const RsGroupMetaData &groupInfo, GroupRecurItemInfo &groupItemInfo)
 {
 	groupItemInfo.id = QString::fromStdString(groupInfo.mGroupId);
 	groupItemInfo.name = QString::fromUtf8(groupInfo.mGroupName.c_str());
@@ -1010,18 +1039,18 @@ void MeshDemocListDialog::insertGroupData(const std::list<RsGroupMetaData> &grou
 {
 	std::list<RsGroupMetaData>::const_iterator it;
 
-	QList<GroupItemInfo> adminList;
-	QList<GroupItemInfo> subList;
-	QList<GroupItemInfo> popList;
-	QList<GroupItemInfo> otherList;
-	std::multimap<uint32_t, GroupItemInfo> popMap;
+	QList<GroupRecurItemInfo> adminList;
+	QList<GroupRecurItemInfo> subList;
+	QList<GroupRecurItemInfo> popList;
+	QList<GroupRecurItemInfo> otherList;
+	std::multimap<uint32_t, GroupRecurItemInfo> popMap;
 
 	for (it = groupList.begin(); it != groupList.end(); it++) 
 	{
 		/* sort it into Publish (Own), Subscribed, Popular and Other */
 		uint32_t flags = it->mSubscribeFlags;
 
-		GroupItemInfo groupItemInfo;
+		GroupRecurItemInfo groupItemInfo;
 		groupInfoToGroupItemInfo(*it, groupItemInfo);
 
 		if (IS_GROUP_SUBSCRIBED(flags))
@@ -1050,7 +1079,7 @@ void MeshDemocListDialog::insertGroupData(const std::list<RsGroupMetaData> &grou
 
 	uint32_t i = 0;
 	uint32_t popLimit = 0;
-	std::multimap<uint32_t, GroupItemInfo>::reverse_iterator rit;
+	std::multimap<uint32_t, GroupRecurItemInfo>::reverse_iterator rit;
 	for(rit = popMap.rbegin(); ((rit != popMap.rend()) && (i < popCount)); rit++, i++) ;
 	if (rit != popMap.rend()) {
 		popLimit = rit->first;

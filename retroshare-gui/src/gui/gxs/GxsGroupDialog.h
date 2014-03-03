@@ -148,6 +148,7 @@ public:
 	// overloaded from TokenResponse
 	virtual void loadRequest(const TokenQueue *queue, const TokenRequest &req);
 
+	void setParentLabel(QString parentId);
 private:
 	void newGroup();
 	void init();

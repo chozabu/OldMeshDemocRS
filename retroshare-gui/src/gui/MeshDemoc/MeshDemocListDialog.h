@@ -85,6 +85,8 @@ private slots:
 	void todo();
 
 	void showVotes(RsGxsGrpMsgIdPair msgID);
+	void newSubTopic();
+	void newRepresentitive();
 protected:
 	virtual void updateDisplay(bool complete);
 
@@ -133,7 +135,7 @@ private:
 	void updateCurrentDisplayComplete(const uint32_t& token);
 
 	void insertGroupData(const std::list<RsGroupMetaData> &groupList);
-	void groupInfoToGroupItemInfo(const RsGroupMetaData &groupInfo, GroupItemInfo &groupItemInfo);
+	void groupInfoToGroupItemInfo(const RsGroupMetaData &groupInfo, GroupRecurItemInfo &groupItemInfo);
 
 	void loadRequest(const TokenQueue *queue, const TokenRequest &req);
 	
