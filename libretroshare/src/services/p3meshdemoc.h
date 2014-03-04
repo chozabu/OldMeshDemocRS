@@ -64,6 +64,8 @@ public:
 	virtual bool getGroupData(const uint32_t &token, std::vector<RsMeshDemocGroup> &groups);
 	virtual bool getPostData(const uint32_t &token, std::vector<RsMeshDemocPost> &posts);
 	virtual bool getRelatedPosts(const uint32_t &token, std::vector<RsMeshDemocPost> &posts);
+	virtual bool getRelatedReprs(const uint32_t &token, std::vector<RsMeshDemocRepr> &posts);
+	virtual bool getGxsRelatedVotes(const uint32_t &token, std::multimap<RsGxsMessageId, RsGxsVote *> &voteMap);
 	//virtual bool getRelatedVotes(const uint32_t &token, std::multimap<RsGxsMessageId, RsGxsVoteItem *> &voteMap);
 
 	virtual bool createGroup(uint32_t &token, RsMeshDemocGroup &group);
@@ -91,7 +93,8 @@ virtual bool getRelatedComments(const uint32_t &token, std::vector<RsGxsComment>
 	}
 virtual bool getRelatedVotes(const uint32_t &token, std::multimap<RsGxsMessageId, RsGxsVote *> &voteMap)
 	{
-		return mCommentService->getGxsRelatedVotes(token, voteMap);
+		//return mCommentService->getGxsRelatedVotes(token, voteMap);
+		return getGxsRelatedVotes(token, voteMap);
 	}
 
 virtual bool createComment(uint32_t &token, RsGxsComment &msg)

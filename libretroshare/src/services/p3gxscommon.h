@@ -67,7 +67,6 @@ class p3GxsCommentService: public GxsTokenQueue
 	void comment_tick();
 
 	bool getGxsCommentData(const uint32_t &token, std::vector<RsGxsComment> &msgs);
-	bool getGxsRelatedVotes(const uint32_t &token, std::multimap<RsGxsMessageId, RsGxsVote *> &voteMap);
 	bool getGxsRelatedComments(const uint32_t &token, std::vector<RsGxsComment> &msgs);
 
 	bool createGxsComment(uint32_t &token, RsGxsComment &msg);

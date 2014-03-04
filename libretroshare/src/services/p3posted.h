@@ -91,7 +91,7 @@ virtual bool getRelatedComments(const uint32_t &token, std::vector<RsGxsComment>
 	}
 	virtual bool getRelatedVotes(const uint32_t &token, std::multimap<RsGxsMessageId, RsGxsVote *> &voteMap)
 		{
-			return mCommentService->getGxsRelatedVotes(token, voteMap);
+			return false;//return mCommentService->getGxsRelatedVotes(token, voteMap);
 		}
 
 virtual bool createComment(uint32_t &token, RsGxsComment &msg)
