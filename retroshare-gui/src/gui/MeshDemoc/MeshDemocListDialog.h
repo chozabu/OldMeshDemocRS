@@ -84,6 +84,8 @@ private slots:
 	
 	void todo();
 
+	void showCurrentReprs();
+	void showReprs(RsGxsGroupId groupId);
 	void showVotes(RsGxsGrpMsgIdPair msgID);
 	void newSubTopic();
 	void newRepresentitive();
@@ -165,6 +167,7 @@ private:
 	/* UI - from Designer */
 	Ui::MeshDemocListDialog ui;
 	void showVotesFromToken(u_int32_t token);
+	void showReprsFromToken(u_int32_t token);
 };
 
 #endif

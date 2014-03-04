@@ -2,6 +2,7 @@
 #define SELECTREPRESENTITIVEDIALOG_H
 
 #include <QDialog>
+#include "retroshare/rsmeshdemoc.h"
 
 class TokenQueue;
 
@@ -14,7 +15,7 @@ class SelectRepresentitiveDialog : public QDialog
 	Q_OBJECT
 
 public:
-	explicit SelectRepresentitiveDialog(QWidget *parent = 0);
+	explicit SelectRepresentitiveDialog(TokenQueue* tokenQ, RsMeshDemoc* posted, const RsGxsGroupId& grpId, QWidget *parent = 0);
 	~SelectRepresentitiveDialog();
 
 private slots:
@@ -22,6 +23,8 @@ private slots:
 private:
 	Ui::SelectRepresentitiveDialog *ui;
 	TokenQueue* mTokenQueue;
+	RsMeshDemoc* mMeshDemoc;
+	RsGxsGroupId mGrpId;
 };
 
 #endif // SELECTREPRESENTITIVEDIALOG_H

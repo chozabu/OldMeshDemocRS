@@ -203,6 +203,8 @@ void MeshDemocListDialog::groupListCustomPopupMenu(QPoint /*point*/)
 	action->setEnabled(isSubscribed);
 	action = contextMnu.addAction(QIcon(IMAGE_FOLDER), tr("Select Representitive"), this, SLOT(newRepresentitive()));
 	action->setEnabled(isSubscribed);
+	action = contextMnu.addAction(QIcon(IMAGE_FOLDER), tr("Show Representitives"), this, SLOT(showCurrentReprs()));
+	action->setEnabled(isSubscribed);
 
 	contextMnu.exec(QCursor::pos());
 }
@@ -224,8 +226,21 @@ void MeshDemocListDialog::newRepresentitive()
 	if (mCurrTopicId.empty()) {
         return;
     }
-    SelectRepresentitiveDialog srd;
+    SelectRepresentitiveDialog srd(mMeshDemocQueue, rsMeshDemoc, mCurrTopicId, this);
 	srd.exec();
+
+
+	/*if(mCurrTopicId.empty())
+		return;
+
+	uint32_t subscribeFlags = ui.groupTreeWidget->subscribeFlags(QString::fromStdString(mCurrTopicId));
+	bool isSubscribed = IS_GROUP_SUBSCRIBED(subscribeFlags);
+
+	if (isSubscribed)
+	{
+		MeshDemocCreatePostDialog cp(mMeshDemocQueue, rsMeshDemoc, mCurrTopicId, this);
+		cp.exec();
+	}*/
 }
 
 void MeshDemocListDialog::showVotes(RsGxsGrpMsgIdPair msgID)
@@ -239,6 +254,29 @@ void MeshDemocListDialog::showVotes(RsGxsGrpMsgIdPair msgID)
 	uint32_t token;
 	mMeshDemocQueue->requestMsgRelatedInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, msgIds, TOKENREQ_MSGRELATEDINFO);
 	//mMeshDemocQueue->queueRequest(token, 0, RS_TOKREQ_ANSTYPE_DATA, TOKENREQ_MSGINFO);
+	showCurrentReprs();
+}
+
+void MeshDemocListDialog::showCurrentReprs()
+{
+	showReprs(mCurrTopicId);
+}
+
+void MeshDemocListDialog::showReprs(RsGxsGroupId groupId)
+{
+	RsTokReqOptions opts;
+
+	opts.mReqType = GXS_REQUEST_TYPE_MSG_DATA;
+	opts.mOptions = RS_TOKREQOPT_MSG_LATEST;
+
+	std::list<RsGxsGroupId> grpIds;
+	grpIds.push_back(groupId);
+
+	std::cerr << "MeshDemocListDialog::requestGroupThreadData_InsertThreads(" << groupId << ")";
+	std::cerr << std::endl;
+
+	uint32_t token;
+	mMeshDemocQueue->requestMsgInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, grpIds, TOKEN_USER_TYPE_REPR);
 }
 
 void MeshDemocListDialog::showVotesFromToken(u_int32_t token)
@@ -263,6 +301,25 @@ void MeshDemocListDialog::showVotesFromToken(u_int32_t token)
 	}
 	messageString.append(QString("end\n"));
 	QMessageBox::information(NULL, "votes!", messageString);
+}
+void MeshDemocListDialog::showReprsFromToken(u_int32_t token)
+{
+	QString messageString;
+	std::vector<RsMeshDemocRepr> representerList;
+	rsMeshDemoc->getRelatedReprs(token, representerList);
+	messageString.append(QString("start\n"));
+	messageString.append(QString::number(representerList.size()));
+	messageString.append(QString(" representors \n"));
+
+	std::vector<RsMeshDemocRepr>::iterator it;
+	for (it = representerList.begin(); it != representerList.end(); it++){
+		RsMeshDemocRepr item = *it;
+			messageString.append(QString(item.mRepresenterId.c_str()));
+
+			messageString.append(QString("\n"));
+	}
+	messageString.append(QString("end\n"));
+	QMessageBox::information(NULL, "representations!", messageString);
 }
 
 void MeshDemocListDialog::newPost()
@@ -955,6 +1012,20 @@ void MeshDemocListDialog::loadRequest(const TokenQueue *queue, const TokenReques
 						break;
 				}
 				break;
+		case TOKEN_USER_TYPE_REPR:
+			switch(req.mAnsType)
+			{
+				case RS_TOKREQ_ANSTYPE_ACK:
+					acknowledgePostMsg(req.mToken);
+					break;
+				case RS_TOKREQ_ANSTYPE_DATA:
+					showReprsFromToken(req.mToken);
+					break;
+				default:
+					std::cerr << "Error, unexpected anstype:" << req.mAnsType << std::endl;
+					break;
+			}
+			break;
 			case TOKEN_USER_TYPE_VOTE:
 				switch(req.mAnsType)
 				{
@@ -966,16 +1037,16 @@ void MeshDemocListDialog::loadRequest(const TokenQueue *queue, const TokenReques
 						break;
 				}
 				break;
-		case TOKENREQ_MSGRELATEDINFO:
-			switch(req.mAnsType)
-			{
-			case RS_TOKREQ_ANSTYPE_DATA:
-				showVotesFromToken(req.mToken);
-				break;
-				default:
-					std::cerr << "Error, unexpected anstype:" << req.mAnsType << std::endl;
-					break;
-			}
+			case TOKENREQ_MSGRELATEDINFO:
+				switch(req.mAnsType)
+				{
+					case RS_TOKREQ_ANSTYPE_DATA:
+						showVotesFromToken(req.mToken);
+						break;
+					default:
+						std::cerr << "Error, unexpected anstype:" << req.mAnsType << std::endl;
+						break;
+				}
 			case TOKEN_USER_TYPE_POST_MOD:
 				switch(req.mAnsType)
 				{

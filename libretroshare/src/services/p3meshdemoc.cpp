@@ -174,13 +174,16 @@ bool p3MeshDemoc::getRelatedPosts(const uint32_t &token, std::vector<RsMeshDemoc
 
 bool p3MeshDemoc::getRelatedReprs(const uint32_t &token, std::vector<RsMeshDemocRepr> &msgs)
 {
-	GxsMsgRelatedDataMap msgData;
-	bool ok = RsGenExchange::getMsgRelatedData(token, msgData);
+	//GxsMsgRelatedDataMap msgData;
+	//bool ok = RsGenExchange::getMsgRelatedData(token, msgData);
+
+	GxsMsgDataMap msgData;
+	bool ok = RsGenExchange::getMsgData(token, msgData);
 	//time_t now = time(NULL);
 
 	if(ok)
 	{
-		GxsMsgRelatedDataMap::iterator mit = msgData.begin();
+		GxsMsgDataMap::iterator mit = msgData.begin();
 
 		for(; mit != msgData.end();  mit++)
 		{
@@ -350,7 +353,7 @@ bool p3MeshDemoc::createPost(uint32_t &token, RsMeshDemocPost &msg)
 
 bool p3MeshDemoc::createRepr(uint32_t &token, RsMeshDemocRepr &msg)
 {
-	std::cerr << "p3Posted::createPost() GroupId: " << msg.mMeta.mGroupId;
+	std::cerr << "p3Posted::createRepr() GroupId: " << msg.mMeta.mGroupId;
 	std::cerr << std::endl;
 
 	RsGxsMeshDemocRepresentationItem* msgItem = new RsGxsMeshDemocRepresentationItem();
