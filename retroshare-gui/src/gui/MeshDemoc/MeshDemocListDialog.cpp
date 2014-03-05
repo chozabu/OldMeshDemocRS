@@ -226,21 +226,15 @@ void MeshDemocListDialog::newRepresentitive()
 	if (mCurrTopicId.empty()) {
         return;
     }
-    SelectRepresentitiveDialog srd(mMeshDemocQueue, rsMeshDemoc, mCurrTopicId, this);
-	srd.exec();
-
-
-	/*if(mCurrTopicId.empty())
-		return;
 
 	uint32_t subscribeFlags = ui.groupTreeWidget->subscribeFlags(QString::fromStdString(mCurrTopicId));
 	bool isSubscribed = IS_GROUP_SUBSCRIBED(subscribeFlags);
-
 	if (isSubscribed)
 	{
-		MeshDemocCreatePostDialog cp(mMeshDemocQueue, rsMeshDemoc, mCurrTopicId, this);
-		cp.exec();
-	}*/
+    SelectRepresentitiveDialog srd(mMeshDemocQueue, rsMeshDemoc, mCurrTopicId, this);
+	srd.exec();
+	}
+
 }
 
 void MeshDemocListDialog::showVotes(RsGxsGrpMsgIdPair msgID)
@@ -253,8 +247,6 @@ void MeshDemocListDialog::showVotes(RsGxsGrpMsgIdPair msgID)
 	msgIds.push_back(msgID);
 	uint32_t token;
 	mMeshDemocQueue->requestMsgRelatedInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, msgIds, TOKENREQ_MSGRELATEDINFO);
-	//mMeshDemocQueue->queueRequest(token, 0, RS_TOKREQ_ANSTYPE_DATA, TOKENREQ_MSGINFO);
-	showCurrentReprs();
 }
 
 void MeshDemocListDialog::showCurrentReprs()
