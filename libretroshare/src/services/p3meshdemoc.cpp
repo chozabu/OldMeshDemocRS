@@ -327,7 +327,7 @@ bool RsMeshDemocPost::calculateScores(time_t ref_time)
 
 bool p3MeshDemoc::createGroup(uint32_t &token, RsMeshDemocGroup &group)
 {
-	std::cerr << "p3Posted::createGroup()" << std::endl;
+	std::cerr << "p3MeshDemoc::createGroup()" << std::endl;
 
 	RsGxsMeshDemocGroupItem* grpItem = new RsGxsMeshDemocGroupItem();
 	grpItem->mGroup = group;
@@ -340,7 +340,7 @@ bool p3MeshDemoc::createGroup(uint32_t &token, RsMeshDemocGroup &group)
 
 bool p3MeshDemoc::createPost(uint32_t &token, RsMeshDemocPost &msg)
 {
-	std::cerr << "p3Posted::createPost() GroupId: " << msg.mMeta.mGroupId;
+	std::cerr << "p3MeshDemoc::createPost() GroupId: " << msg.mMeta.mGroupId;
 	std::cerr << std::endl;
 
 	RsGxsMeshDemocPostItem* msgItem = new RsGxsMeshDemocPostItem();
@@ -353,7 +353,7 @@ bool p3MeshDemoc::createPost(uint32_t &token, RsMeshDemocPost &msg)
 
 bool p3MeshDemoc::createRepr(uint32_t &token, RsMeshDemocRepr &msg)
 {
-	std::cerr << "p3Posted::createRepr() GroupId: " << msg.mMeta.mGroupId;
+	std::cerr << "p3MeshDemoc::createRepr() GroupId: " << msg.mMeta.mGroupId;
 	std::cerr << std::endl;
 
 	RsGxsMeshDemocRepresentationItem* msgItem = new RsGxsMeshDemocRepresentationItem();

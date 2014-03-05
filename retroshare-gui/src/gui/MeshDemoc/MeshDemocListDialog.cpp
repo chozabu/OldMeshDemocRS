@@ -264,7 +264,7 @@ void MeshDemocListDialog::showReprs(RsGxsGroupId groupId)
 	std::list<RsGxsGroupId> grpIds;
 	grpIds.push_back(groupId);
 
-	std::cerr << "MeshDemocListDialog::requestGroupThreadData_InsertThreads(" << groupId << ")";
+	std::cerr << "MeshDemocListDialog::showReprs(" << groupId << ")";
 	std::cerr << std::endl;
 
 	uint32_t token;

@@ -42,12 +42,11 @@ SelectRepresentitiveDialog::~SelectRepresentitiveDialog()
 
 void SelectRepresentitiveDialog::createRepr()
 {
-
 	FriendSelectionWidget::IdType type ;
-	std::string current_pgp_id = ui->friendSelectionWidget->selectedId(type) ;
+	std::string current_pgp_id = ui->friendSelectionWidget->selectedId(type);//store chosed friends ID
 
 	RsGxsId authorId;
-	if (!ui->idChooser->getChosenId(authorId))
+	if (!ui->idChooser->getChosenId(authorId))//get Authors ID
 	{
 		std::cerr << "MeshDemocCreatePostDialog::createPost() ERROR GETTING AuthorId!, Post Failed";
 		std::cerr << std::endl;
@@ -60,13 +59,11 @@ void SelectRepresentitiveDialog::createRepr()
 	RsMeshDemocRepr rep;
 	rep.mMeta.mGroupId = mGrpId;
 	rep.mRepresenterId = current_pgp_id;
-	rep.mMeta.mMsgName = std::string("repritem");
+	rep.mMeta.mMsgName = std::string("repritem");//is this needed?
 	rep.mMeta.mAuthorId = authorId;
 
 	uint32_t token;
-	//mTokenQueue->queueRequest(token, TOKENREQ_MSGINFO, RS_TOKREQ_ANSTYPE_ACK, TOKEN_USER_TYPE_POST);
 	rsMeshDemoc->createRepr(token,rep);
 	mTokenQueue->queueRequest(token, TOKENREQ_MSGINFO, RS_TOKREQ_ANSTYPE_ACK, TOKEN_USER_TYPE_REPR);
 	QMessageBox::information(NULL,tr("Representitive chosen"),tr("Your new representitive has been chosen.")) ;
-
 }
