@@ -1097,6 +1097,7 @@ void MeshDemocListDialog::groupInfoToGroupItemInfo(const RsGroupMetaData &groupI
 	groupItemInfo.popularity = groupInfo.mPop;
 	groupItemInfo.lastpost = QDateTime::fromTime_t(groupInfo.mLastPost);
 	groupItemInfo.subscribeFlags = groupInfo.mSubscribeFlags;
+	groupItemInfo.parentId = QString::fromStdString(groupInfo.mParentGrpId);
 }
 
 void MeshDemocListDialog::insertGroupData(const std::list<RsGroupMetaData> &groupList)
