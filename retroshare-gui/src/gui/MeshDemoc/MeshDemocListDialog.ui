@@ -62,7 +62,7 @@
              <string>Submit a new Post</string>
             </property>
             <property name="icon">
-             <iconset resource="Posted_images.qrc">
+             <iconset resource="MeshDemoc_images.qrc">
               <normaloff>:/images/posted_24.png</normaloff>:/images/posted_24.png</iconset>
             </property>
            </widget>
@@ -137,7 +137,7 @@
                <string>Hot</string>
               </property>
               <property name="icon">
-               <iconset resource="Posted_images.qrc">
+               <iconset resource="MeshDemoc_images.qrc">
                 <normaloff>:/images/hot_24.png</normaloff>:/images/hot_24.png</iconset>
               </property>
               <property name="iconSize">
@@ -160,7 +160,7 @@
                <string>New</string>
               </property>
               <property name="icon">
-               <iconset resource="Posted_images.qrc">
+               <iconset resource="MeshDemoc_images.qrc">
                 <normaloff>:/images/new_24.png</normaloff>:/images/new_24.png</iconset>
               </property>
               <property name="iconSize">
@@ -254,6 +254,44 @@
         </layout>
        </item>
        <item row="2" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Representitive:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="representitiveLabel">
+           <property name="text">
+            <string>loading...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="representitiveButton">
+           <property name="text">
+            <string>Select Representitive</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="3" column="0">
         <widget class="QScrollArea" name="scrollArea">
          <property name="widgetResizable">
           <bool>true</bool>
@@ -263,7 +301,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>711</width>
+            <width>718</width>
             <height>16</height>
            </rect>
           </property>
@@ -292,20 +330,20 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>GxsIdChooser</class>
+   <extends>QComboBox</extends>
+   <header>gui/gxs/GxsIdChooser.h</header>
+  </customwidget>
+  <customwidget>
    <class>RecurGroupTreeWidget</class>
    <extends>QWidget</extends>
    <header>gui/common/RecurGroupTreeWidget.h</header>
    <container>1</container>
   </customwidget>
-  <customwidget>
-   <class>GxsIdChooser</class>
-   <extends>QComboBox</extends>
-   <header>gui/gxs/GxsIdChooser.h</header>
-  </customwidget>
  </customwidgets>
  <resources>
-  <include location="Posted_images.qrc"/>
   <include location="../images.qrc"/>
+  <include location="MeshDemoc_images.qrc"/>
  </resources>
  <connections/>
 </ui>

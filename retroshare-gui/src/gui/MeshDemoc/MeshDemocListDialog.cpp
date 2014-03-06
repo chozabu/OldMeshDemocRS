@@ -29,6 +29,7 @@
 #include "MeshDemocItem.h"
 #include "MeshDemocUserTypes.h"
 #include "SelectRepresentitiveDialog.h"
+#include "gui/gxs/GxsIdDetails.h"
 
 #include <iostream>
 
@@ -74,6 +75,8 @@ MeshDemocListDialog::MeshDemocListDialog(QWidget *parent)
 	connect(ui.topSortButton, SIGNAL(clicked()), this, SLOT(getRankings()));
 	connect(ui.nextButton, SIGNAL(clicked()), this, SLOT(showNext()));
 	connect(ui.prevButton, SIGNAL(clicked()), this, SLOT(showPrev()));
+
+	connect(ui.representitiveButton, SIGNAL(clicked()), this, SLOT(newRepresentitive()));
 	
 	connect(ui.pushButton, SIGNAL(clicked()), this, SLOT(todo()));
 
@@ -309,6 +312,10 @@ void MeshDemocListDialog::showReprsFromToken(u_int32_t token)
 	messageString.append(QString::number(representerList.size()));
 	messageString.append(QString(" representors \n"));
 
+
+	RsGxsId authorId;
+	if (!ui.idChooser->getChosenId(authorId)){}
+
 	std::vector<RsMeshDemocRepr>::iterator it;
 	for (it = representerList.begin(); it != representerList.end(); it++){
 		RsMeshDemocRepr item = *it;
@@ -316,6 +323,12 @@ void MeshDemocListDialog::showReprsFromToken(u_int32_t token)
 			messageString.append(QString("-->"));
 			messageString.append(QString(item.mRepresenterId.c_str()));
 
+			if (item.mMeta.mAuthorId.compare(authorId) == 0){
+				QString desc;
+				std::list<QIcon> icons;
+				bool loaded = GxsIdDetails::MakeIdDesc(authorId, false, desc, icons);
+				ui.representitiveLabel->setText(QString(desc));
+			}
 			messageString.append(QString("\n"));
 	}
 	messageString.append(QString("end\n"));
