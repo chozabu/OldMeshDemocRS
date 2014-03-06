@@ -205,7 +205,7 @@ RsGxsMeshDemocRepresentationItem* RsGxsMeshDemocSerialiser::deserialiseGxsMeshDe
 {
 
 #ifdef POSTED_DEBUG
-	std::cerr << "RsGxsMeshDemocSerialiser::deserialiseGxsMeshDemocPostItem()" << std::endl;
+	std::cerr << "RsGxsMeshDemocSerialiser::deserialiseGxsMeshDemocRepresentationItem()" << std::endl;
 #endif
 	/* get the type and size */
 	uint32_t rstype = getRsItemId(data);
@@ -215,15 +215,15 @@ RsGxsMeshDemocRepresentationItem* RsGxsMeshDemocSerialiser::deserialiseGxsMeshDe
 
 	if ((RS_PKT_VERSION_SERVICE != getRsItemVersion(rstype)) ||
 			(RS_SERVICE_GXSV2_TYPE_MESH_DEMOC != getRsItemService(rstype)) ||
-			(RS_PKT_SUBTYPE_MESH_DEMOC_POST_ITEM != getRsItemSubType(rstype)))
+			(RS_PKT_SUBTYPE_MESH_DEMOC_REPR_ITEM != getRsItemSubType(rstype)))
 	{
-			std::cerr << "RsGxsMeshDemocSerialiser::deserialiseGxsMeshDemocPostItem() FAIL wrong type" << std::endl;
+			std::cerr << "RsGxsMeshDemocSerialiser::deserialiseGxsMeshDemocRepresentationItem() FAIL wrong type" << std::endl;
 			return NULL; /* wrong type */
 	}
 
 	if (*size < rssize)	/* check size */
 	{
-			std::cerr << "RsGxsMeshDemocSerialiser::deserialiseGxsMeshDemocPostItem() FAIL wrong size" << std::endl;
+			std::cerr << "RsGxsMeshDemocSerialiser::deserialiseGxsMeshDemocRepresentationItem() FAIL wrong size" << std::endl;
 			return NULL; /* not enough data */
 	}
 
@@ -240,7 +240,7 @@ RsGxsMeshDemocRepresentationItem* RsGxsMeshDemocSerialiser::deserialiseGxsMeshDe
 
 	if (offset != rssize)
 	{
-		std::cerr << "RsGxsMeshDemocSerialiser::deserialiseGxsMeshDemocPostItem() FAIL size mismatch" << std::endl;
+		std::cerr << "RsGxsMeshDemocSerialiser::deserialiseGxsMeshDemocRepresentationItem() FAIL size mismatch" << std::endl;
 		/* error */
 		delete item;
 		return NULL;
@@ -249,7 +249,7 @@ RsGxsMeshDemocRepresentationItem* RsGxsMeshDemocSerialiser::deserialiseGxsMeshDe
 	if (!ok)
 	{
 #ifdef POSTED_DEBUG
-			std::cerr << "RsGxsMeshDemocSerialiser::deserialiseGxsMeshDemocPostItem() NOK" << std::endl;
+			std::cerr << "RsGxsMeshDemocSerialiser::deserialiseGxsMeshDemocRepresentationItem() NOK" << std::endl;
 #endif
 		delete item;
 		return NULL;
