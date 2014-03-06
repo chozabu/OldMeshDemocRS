@@ -205,7 +205,7 @@ bool p3MeshDemoc::getRelatedReprs(const uint32_t &token, std::vector<RsMeshDemoc
 				}
 				else
 				{
-					std::cerr << "Not a PostedPostItem, deleting!" << std::endl;
+					std::cerr << "Not a RsGxsMeshDemocRepresentationItem, deleting!" << std::endl;
 					delete *vit;
 				}
 			}
@@ -215,7 +215,7 @@ bool p3MeshDemoc::getRelatedReprs(const uint32_t &token, std::vector<RsMeshDemoc
 	return ok;
 }
 
-bool p3MeshDemoc::getGxsRelatedVotes(const uint32_t &token, std::multimap<RsGxsMessageId, RsGxsVote *> &voteMap)
+bool p3MeshDemoc::getGxsRelatedVotes(const uint32_t &token, std::multimap<RsGxsMessageId, RsGxsVoteItem *> &voteMap)
 {
 	std::cerr << "\n\n---\n\np3GxsCommentService::getGxsRelatedVotes()";
 	std::cerr << std::endl;
@@ -244,35 +244,26 @@ bool p3MeshDemoc::getGxsRelatedVotes(const uint32_t &token, std::multimap<RsGxsM
 			{
 				std::cerr << "vit";
 				std::cerr << std::endl;
-				RsGxsCommentItem* item = dynamic_cast<RsGxsCommentItem*>(*vit);
 
-				if(item)
+				RsGxsVoteItem* vote = dynamic_cast<RsGxsVoteItem*>(*vit);
+				if (vote)
 				{
-					std::cerr << "Comment, deleting!" << std::endl;
-					delete item;
+					voteMap.insert(std::make_pair(vote->meta.mParentId, vote));
+					std::cerr << "!!" << std::endl;
+					std::cerr << "GOT A VOTE!" << std::endl;
+					std::cerr << "!!" << std::endl;
 				}
 				else
 				{
-					RsGxsVoteItem* vote = dynamic_cast<RsGxsVoteItem*>(*vit);
-					if (vote)
-					{
-						voteMap.insert(std::make_pair(vote->meta.mParentId, &(vote->mMsg)));
-						std::cerr << "!!" << std::endl;
-						std::cerr << "GOT A VOTE!" << std::endl;
-						std::cerr << "!!" << std::endl;
-					}
-					else
-					{
-						std::cerr << "Not a Comment or Vote, deleting!" << std::endl;
-						delete *vit;
-					}
+					std::cerr << "Not a Vote, deleting!" << std::endl;
+					delete *vit;
 				}
 			}
 		}
 	} else {
 		std::cerr << "nope failed on:";
 		std::cerr << std::endl;
-		std::cerr << "mExchange->getMsgRelatedData(token, msgData);\n\n\n\n\n";
+		std::cerr << "mExchange->getGxsRelatedVotes(token, msgData);\n\n\n\n\n";
 	}
 
 	return ok;

@@ -29,6 +29,7 @@
 
 #include "retroshare/rsmeshdemoc.h"
 #include "services/p3postbase.h"
+#include "serialiser/rsgxscommentitems.h"
 
 
 #include <map>
@@ -65,7 +66,7 @@ public:
 	virtual bool getPostData(const uint32_t &token, std::vector<RsMeshDemocPost> &posts);
 	virtual bool getRelatedPosts(const uint32_t &token, std::vector<RsMeshDemocPost> &posts);
 	virtual bool getRelatedReprs(const uint32_t &token, std::vector<RsMeshDemocRepr> &posts);
-	virtual bool getGxsRelatedVotes(const uint32_t &token, std::multimap<RsGxsMessageId, RsGxsVote *> &voteMap);
+	virtual bool getGxsRelatedVotes(const uint32_t &token, std::multimap<RsGxsMessageId, RsGxsVoteItem *> &voteMap);
 	//virtual bool getRelatedVotes(const uint32_t &token, std::multimap<RsGxsMessageId, RsGxsVoteItem *> &voteMap);
 
 	virtual bool createGroup(uint32_t &token, RsMeshDemocGroup &group);
@@ -91,7 +92,7 @@ virtual bool getRelatedComments(const uint32_t &token, std::vector<RsGxsComment>
 	{
 		return mCommentService->getGxsRelatedComments(token, msgs);
 	}
-virtual bool getRelatedVotes(const uint32_t &token, std::multimap<RsGxsMessageId, RsGxsVote *> &voteMap)
+virtual bool getRelatedVotes(const uint32_t &token, std::multimap<RsGxsMessageId, RsGxsVoteItem *> &voteMap)
 	{
 		//return mCommentService->getGxsRelatedVotes(token, voteMap);
 		return getGxsRelatedVotes(token, voteMap);
