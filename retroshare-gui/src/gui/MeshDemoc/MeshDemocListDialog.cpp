@@ -93,8 +93,7 @@ MeshDemocListDialog::MeshDemocListDialog(QWidget *parent)
 	/* create posted tree */
 	yourTopics = ui.groupTreeWidget->addCategoryItem(tr("My Topics"), QIcon(IMAGE_FOLDER), true);
 	subscribedTopics = ui.groupTreeWidget->addCategoryItem(tr("Subscribed Topics"), QIcon(IMAGE_FOLDERRED), true);
-	popularTopics = ui.groupTreeWidget->addCategoryItem(tr("Popular Topics"), QIcon(IMAGE_FOLDERGREEN), false);
-	otherTopics = ui.groupTreeWidget->addCategoryItem(tr("Other Topics"), QIcon(IMAGE_FOLDERYELLOW), false);
+	allTopics = ui.groupTreeWidget->addCategoryItem(tr("All Topics"), QIcon(IMAGE_FOLDERYELLOW), false);
 
 	ui.hotSortButton->setChecked(true);
 
@@ -1106,8 +1105,7 @@ void MeshDemocListDialog::insertGroupData(const std::list<RsGroupMetaData> &grou
 
 	QList<GroupRecurItemInfo> adminList;
 	QList<GroupRecurItemInfo> subList;
-	QList<GroupRecurItemInfo> popList;
-	QList<GroupRecurItemInfo> otherList;
+	QList<GroupRecurItemInfo> allList;
 	std::multimap<uint32_t, GroupRecurItemInfo> popMap;
 
 	for (it = groupList.begin(); it != groupList.end(); it++) 
@@ -1129,40 +1127,14 @@ void MeshDemocListDialog::insertGroupData(const std::list<RsGroupMetaData> &grou
 				subList.push_back(groupItemInfo);
 			}
 		}
-		else
-		{
-			popMap.insert(std::make_pair(it->mPop, groupItemInfo));
-		}
+		allList.push_back(groupItemInfo);
 	}
 
-	/* iterate backwards through popMap - take the top 5 or 10% of list */
-	uint32_t popCount = 5;
-	if (popCount < popMap.size() / 10)
-	{
-		popCount = popMap.size() / 10;
-	}
-
-	uint32_t i = 0;
-	uint32_t popLimit = 0;
-	std::multimap<uint32_t, GroupRecurItemInfo>::reverse_iterator rit;
-	for(rit = popMap.rbegin(); ((rit != popMap.rend()) && (i < popCount)); rit++, i++) ;
-	if (rit != popMap.rend()) {
-		popLimit = rit->first;
-	}
-
-	for (rit = popMap.rbegin(); rit != popMap.rend(); rit++) {
-		if (rit->second.popularity < (int) popLimit) {
-			otherList.append(rit->second);
-		} else {
-			popList.append(rit->second);
-		}
-	}
 
 	/* now we can add them in as a tree! */
 	ui.groupTreeWidget->fillGroupItems(yourTopics, adminList);
 	ui.groupTreeWidget->fillGroupItems(subscribedTopics, subList);
-	ui.groupTreeWidget->fillGroupItems(popularTopics, popList);
-	ui.groupTreeWidget->fillGroupItems(otherTopics, otherList);
+	ui.groupTreeWidget->fillGroupItems(allTopics, allList);
 }
 
 /**************************************************************************************/

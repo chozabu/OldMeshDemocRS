@@ -146,7 +146,7 @@ private:
 	QTreeWidgetItem *yourTopics;
 	QTreeWidgetItem *subscribedTopics;
 	QTreeWidgetItem *popularTopics;
-	QTreeWidgetItem *otherTopics;
+	QTreeWidgetItem *allTopics;
 
 	int	mSortMethod;
 	int	mLastSortMethod;
