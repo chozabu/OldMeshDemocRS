@@ -281,13 +281,20 @@ void MeshDemocListDialog::showVotesFromToken(u_int32_t token)
 	messageString.append(QString(" votes \n"));
 
 	for (it = voteMap.begin(); it != voteMap.end(); it++){
-		if (it->second->mVoteType == GXS_VOTE_UP)
+		RsGxsVote* item = it->second;
+		if (item->mVoteType == GXS_VOTE_UP)
 		{
-			messageString.append(QString("up\n"));
+			messageString.append(QString(item->mMeta.mAuthorId.c_str()));
+			messageString.append(QString(" votes up @ "));
+			messageString.append(QString::number(item->mMeta.mPublishTs));
+			messageString.append(QString("\n"));
 		}
 		else
 		{
-			messageString.append(QString("down\n"));
+			messageString.append(QString(item->mMeta.mAuthorId.c_str()));
+			messageString.append(QString(" votes down @ "));
+			messageString.append(QString::number(item->mMeta.mPublishTs));
+			messageString.append(QString("\n"));
 		}
 	}
 	messageString.append(QString("end\n"));
@@ -305,6 +312,8 @@ void MeshDemocListDialog::showReprsFromToken(u_int32_t token)
 	std::vector<RsMeshDemocRepr>::iterator it;
 	for (it = representerList.begin(); it != representerList.end(); it++){
 		RsMeshDemocRepr item = *it;
+			messageString.append(QString(item.mMeta.mAuthorId.c_str()));
+			messageString.append(QString("-->"));
 			messageString.append(QString(item.mRepresenterId.c_str()));
 
 			messageString.append(QString("\n"));
