@@ -66,4 +66,5 @@ void SelectRepresentitiveDialog::createRepr()
 	rsMeshDemoc->createRepr(token,rep);
 	mTokenQueue->queueRequest(token, TOKENREQ_MSGINFO, RS_TOKREQ_ANSTYPE_ACK, TOKEN_USER_TYPE_REPR);
 	QMessageBox::information(NULL,tr("Representitive chosen"),tr("Your new representitive has been chosen.")) ;
+	accept();
 }
