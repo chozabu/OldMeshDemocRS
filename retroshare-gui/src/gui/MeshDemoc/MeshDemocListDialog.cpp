@@ -78,8 +78,9 @@ MeshDemocListDialog::MeshDemocListDialog(QWidget *parent)
 	connect(ui.nextButton, SIGNAL(clicked()), this, SLOT(showNext()));
 	connect(ui.prevButton, SIGNAL(clicked()), this, SLOT(showPrev()));
 
-	connect(ui.representitiveButton, SIGNAL(clicked()), this, SLOT(newRepresentitive()));
-	
+	//connect(ui.representitiveButton, SIGNAL(clicked()), this, SLOT(newRepresentitive()));
+	ui.representitiveButton->hide();
+
 	connect(ui.pushButton, SIGNAL(clicked()), this, SLOT(todo()));
 
 	// default sort method.
@@ -205,8 +206,8 @@ void MeshDemocListDialog::groupListCustomPopupMenu(QPoint /*point*/)
 
 	action = contextMnu.addAction(QIcon(IMAGE_FOLDERGREEN), tr("New Child-Group"), this, SLOT(newSubTopic()));
 	action->setEnabled(isSubscribed);
-	action = contextMnu.addAction(QIcon(IMAGE_FOLDER), tr("Select Representitive"), this, SLOT(newRepresentitive()));
-	action->setEnabled(isSubscribed);
+	/*action = contextMnu.addAction(QIcon(IMAGE_FOLDER), tr("Select Representitive"), this, SLOT(newRepresentitive()));
+	action->setEnabled(isSubscribed);*/
 	action = contextMnu.addAction(QIcon(IMAGE_FOLDER), tr("Show Representitives"), this, SLOT(showCurrentReprs()));
 	action->setEnabled(isSubscribed);
 
@@ -253,6 +254,47 @@ void MeshDemocListDialog::showVotes(RsGxsGrpMsgIdPair msgID)
 	mMeshDemocQueue->requestMsgRelatedInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, msgIds, TOKENREQ_MSGRELATEDINFO);
 }
 
+void MeshDemocListDialog::selectRepr(std::string reprId){
+
+	RsGxsId authorId;
+	if (!ui.idChooser->getChosenId(authorId))//get Authors ID
+	{
+		std::cerr << "MeshDemocCreatePostDialog::createPost() ERROR GETTING AuthorId!, Post Failed";
+		std::cerr << std::endl;
+
+		QMessageBox::warning(this, tr("RetroShare"),tr("Please create or choose a Signing Id first"), QMessageBox::Ok, QMessageBox::Ok);
+
+		return;
+	}
+
+	RsMeshDemocRepr rep;
+	rep.mMeta.mGroupId = mCurrTopicId;
+	rep.mRepresenterId = reprId;
+	rep.mMeta.mMsgName = std::string("repritem");//is this needed?
+	rep.mMeta.mAuthorId = authorId;
+
+	uint32_t token;
+	rsMeshDemoc->createRepr(token,rep);
+	mMeshDemocQueue->queueRequest(token, TOKENREQ_MSGINFO, RS_TOKREQ_ANSTYPE_ACK, TOKEN_USER_TYPE_REPR);
+
+
+	QString authorStr;
+	std::list<QIcon> icons;
+	GxsIdDetails::MakeIdDesc(authorId, false, authorStr, icons);
+
+	QString representerStr;
+	GxsIdDetails::MakeIdDesc(reprId, false, representerStr, icons);
+
+	QString amsg = "Congratulations ";
+	amsg.append( authorStr);
+	amsg.append(". You have chosen ");
+	amsg.append( representerStr);
+	amsg.append(" as your representitive for this topic");
+
+	QMessageBox::information(NULL,tr("Representitive chosen"),amsg) ;
+
+}
+
 void MeshDemocListDialog::showCurrentReprs()
 {
 
@@ -269,17 +311,21 @@ void MeshDemocListDialog::showCurrentReprs()
 	for(; bmit != mCurrTopicReprs.end(); bmit++)
 	{
 		RsMeshDemocRepr item = *(bmit->second);
-			messageString.append(QString(item.mMeta.mAuthorId.c_str()));
-			messageString.append(QString("-->"));
+
+
+		QString authorStr;
+		QString representerStr;
+		std::list<QIcon> icons;
+		bool loaded = GxsIdDetails::MakeIdDesc(item.mMeta.mAuthorId, false, authorStr, icons);
+		loaded &= GxsIdDetails::MakeIdDesc(item.mRepresenterId, false, representerStr, icons);
+
+		messageString.append(QString(item.mMeta.mAuthorId.c_str()));
+		messageString.append(authorStr);
+			messageString.append(QString(" represented by"));
 			messageString.append(QString(item.mRepresenterId.c_str()));
+			messageString.append(representerStr);
 			messageString.append(QString("\n"));
 
-			/*if (item.mMeta.mAuthorId.compare(authorId) == 0){
-				QString desc;
-				std::list<QIcon> icons;
-				bool loaded = GxsIdDetails::MakeIdDesc(authorId, false, desc, icons);
-				ui.representitiveLabel->setText(QString(desc));
-			}*/
 	}
 	messageString.append(QString("end\n"));
 	QMessageBox::information(NULL, "representations!", messageString);
@@ -752,6 +798,7 @@ void MeshDemocListDialog::loadPost(const RsMeshDemocPost &post)
 	MeshDemocItem *item = new MeshDemocItem(this, 0, post, true);
 	connect(item, SIGNAL(vote(RsGxsGrpMsgIdPair,bool)), this, SLOT(submitVote(RsGxsGrpMsgIdPair,bool)));
 	connect(item, SIGNAL(votesReq(RsGxsGrpMsgIdPair)), this, SLOT(showVotes(RsGxsGrpMsgIdPair)));
+	connect(item, SIGNAL(reprReq(std::string)), this, SLOT(selectRepr(std::string)));
 	mPosts.insert(post.mMeta.mMsgId, item);
 	//QLayout *alayout = ui.scrollAreaWidgetContents->layout();
 	//alayout->addWidget(item);

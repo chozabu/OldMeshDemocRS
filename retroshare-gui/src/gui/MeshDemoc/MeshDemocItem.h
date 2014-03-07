@@ -48,10 +48,12 @@ private slots:
 	void makeUpVote();
 	void makeDownVote();
 	void showVotes();
+	void selectRepr();
 
 signals:
 	void vote(const RsGxsGrpMsgIdPair& msgId, bool up);
 	void votesReq(const RsGxsGrpMsgIdPair& msgId);
+	void reprReq(const std::string reprId);
 
 protected:
 	virtual void loadMessage(const uint32_t &token);

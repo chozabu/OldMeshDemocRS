@@ -149,6 +149,13 @@
        </widget>
       </item>
       <item row="1" column="3">
+       <widget class="QPushButton" name="representButton">
+        <property name="text">
+         <string>RepresentMe</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
        <widget class="QLabel" name="dateBoldLabel">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -168,7 +175,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="4">
+      <item row="1" column="5">
        <widget class="QLabel" name="dateLabel">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -189,7 +196,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="5">
+      <item row="1" column="6">
        <widget class="QLabel" name="fromBoldLabel">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -209,7 +216,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="6">
+      <item row="1" column="7">
        <widget class="GxsIdLabel" name="fromLabel">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -230,7 +237,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="7">
+      <item row="1" column="8">
        <widget class="QLabel" name="fromBoldLabel_2">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -250,7 +257,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="8">
+      <item row="1" column="9">
        <widget class="QLabel" name="siteLabel">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -271,7 +278,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="9">
+      <item row="1" column="10">
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>

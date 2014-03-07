@@ -56,6 +56,7 @@ void MeshDemocItem::setup()
 	connect(voteUpButton, SIGNAL(clicked()), this, SLOT(makeUpVote()));
 	connect(voteDownButton, SIGNAL(clicked()), this, SLOT( makeDownVote()));
 	connect(votesButton, SIGNAL(clicked()), this, SLOT( showVotes()));
+	connect(representButton, SIGNAL(clicked()), this, SLOT( selectRepr()));
 }
 
 void MeshDemocItem::loadMessage(const uint32_t &token)
@@ -206,6 +207,10 @@ void MeshDemocItem::showVotes()
 	msgId.second = mPost.mMeta.mMsgId;
 
 	emit votesReq(msgId);
+}
+void MeshDemocItem::selectRepr()
+{
+	emit reprReq(mPost.mMeta.mAuthorId);
 }
 
 void MeshDemocItem::loadComments()

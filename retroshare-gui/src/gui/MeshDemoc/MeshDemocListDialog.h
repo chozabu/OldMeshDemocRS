@@ -89,6 +89,7 @@ private slots:
 	void showVotes(RsGxsGrpMsgIdPair msgID);
 	void newSubTopic();
 	void newRepresentitive();
+	void selectRepr(std::string reprId);
 protected:
 	virtual void updateDisplay(bool complete);
 
