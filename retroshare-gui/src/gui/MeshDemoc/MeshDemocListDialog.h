@@ -155,6 +155,7 @@ private:
 
 	bool mThreadLoading;
 	RsGxsGroupId mCurrTopicId;
+	std::multimap<RsGxsId, RsMeshDemocRepr *> mCurrTopicReprs;
 
 	QMap<RsGxsGroupId, RsMeshDemocGroup> mGroups;
 	QMap<RsGxsMessageId, MeshDemocItem*> mPosts;

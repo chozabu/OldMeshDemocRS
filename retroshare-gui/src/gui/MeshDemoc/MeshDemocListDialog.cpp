@@ -64,6 +64,8 @@ MeshDemocListDialog::MeshDemocListDialog(QWidget *parent)
 	/* Invoke the Qt Designer generated object setup routine */
 	ui.setupUi(this);
 
+	ui.representitiveLabel->setText(QString("N/A"));
+
 	/* Setup Queue */
 	mMeshDemocQueue = new TokenQueue(rsMeshDemoc->getTokenService(), this);
 
@@ -309,16 +311,18 @@ void MeshDemocListDialog::showReprsFromToken(u_int32_t token)
 
 	std::multimap<RsGxsId, RsMeshDemocRepr *> reprMap;
 	rsMeshDemoc->getRelatedReprs(token, reprMap);
+	mCurrTopicReprs = reprMap;
 	messageString.append(QString("start\n"));
-	messageString.append(QString::number(reprMap.size()));
+	messageString.append(QString::number(mCurrTopicReprs.size()));
 	messageString.append(QString(" representors \n"));
 
 
 	RsGxsId authorId;
 	if (!ui.idChooser->getChosenId(authorId)){}
+	ui.representitiveLabel->setText(QString("No Representer"));
 
-	std::multimap<RsGxsId, RsMeshDemocRepr *>::iterator bmit = reprMap.begin();
-	for(; bmit != reprMap.end(); bmit++)
+	std::multimap<RsGxsId, RsMeshDemocRepr *>::iterator bmit = mCurrTopicReprs.begin();
+	for(; bmit != mCurrTopicReprs.end(); bmit++)
 	{
 		RsMeshDemocRepr item = *(bmit->second);
 			messageString.append(QString(item.mMeta.mAuthorId.c_str()));
@@ -334,7 +338,7 @@ void MeshDemocListDialog::showReprsFromToken(u_int32_t token)
 			messageString.append(QString("\n"));
 	}
 	messageString.append(QString("end\n"));
-	QMessageBox::information(NULL, "representations!", messageString);
+	//QMessageBox::information(NULL, "representations!", messageString);
 }
 
 void MeshDemocListDialog::newPost()
@@ -500,8 +504,10 @@ void MeshDemocListDialog::updateDisplayedItems(const std::vector<RsGxsMessageId>
 
 void MeshDemocListDialog::changedTopic(const QString &id)
 {
+	ui.representitiveLabel->setText(QString("loading..."));
 	mCurrTopicId = id.toStdString();
 	insertThreads();
+	showReprs(mCurrTopicId);
 }
 
 /*********************** **** **** **** ***********************/
