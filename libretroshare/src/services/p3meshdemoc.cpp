@@ -172,19 +172,17 @@ bool p3MeshDemoc::getRelatedPosts(const uint32_t &token, std::vector<RsMeshDemoc
 
 
 
-bool p3MeshDemoc::getRelatedReprs(const uint32_t &token, std::vector<RsMeshDemocRepr> &msgs)
+bool p3MeshDemoc::getRelatedReprs(const uint32_t &token, std::multimap<RsGxsId, RsMeshDemocRepr *> &reprMap)
 {
-	//GxsMsgRelatedDataMap msgData;
-	//bool ok = RsGenExchange::getMsgRelatedData(token, msgData);
-
 	GxsMsgDataMap msgData;
 	bool ok = RsGenExchange::getMsgData(token, msgData);
-	//time_t now = time(NULL);
+	std::map<RsGxsId, RsMeshDemocRepr *> backwardsReprMap;
 
 	if(ok)
 	{
 		GxsMsgDataMap::iterator mit = msgData.begin();
 
+		//extract representation - remove multi-representers
 		for(; mit != msgData.end();  mit++)
 		{
 			std::vector<RsGxsMsgItem*>& msgItems = mit->second;
@@ -196,12 +194,18 @@ bool p3MeshDemoc::getRelatedReprs(const uint32_t &token, std::vector<RsMeshDemoc
 
 				if(item)
 				{
-					RsMeshDemocRepr msg = item->mPost;
-					msg.mMeta = item->meta;
-					//msg.calculateScores(now);
-
-					msgs.push_back(msg);
-					delete item;
+					RsMeshDemocRepr* msg = &(item->mPost);
+					msg->mMeta = item->meta;
+					if(backwardsReprMap.find(msg->mMeta.mAuthorId) == backwardsReprMap.end())
+					{
+						//backwardsReprMap.[msg->mMeta.mAuthorId] = &msg;
+						backwardsReprMap.insert(std::make_pair(msg->mRepresenterId, msg));
+					} else {
+						if (msg->mMeta.mPublishTs > backwardsReprMap[msg->mMeta.mAuthorId]->mMeta.mPublishTs)
+							backwardsReprMap[msg->mMeta.mAuthorId] = msg;
+						else
+							delete item;
+					}
 				}
 				else
 				{
@@ -210,6 +214,14 @@ bool p3MeshDemoc::getRelatedReprs(const uint32_t &token, std::vector<RsMeshDemoc
 				}
 			}
 		}
+
+		//put into map based on representee
+		std::map<RsGxsId, RsMeshDemocRepr *>::iterator bmit = backwardsReprMap.begin();
+		for(; bmit != backwardsReprMap.end(); bmit++)
+		{
+			reprMap.insert(std::make_pair(bmit->second->mRepresenterId, bmit->second));
+		}
+
 	}
 
 	return ok;

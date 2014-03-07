@@ -65,7 +65,7 @@ public:
 	virtual bool getGroupData(const uint32_t &token, std::vector<RsMeshDemocGroup> &groups);
 	virtual bool getPostData(const uint32_t &token, std::vector<RsMeshDemocPost> &posts);
 	virtual bool getRelatedPosts(const uint32_t &token, std::vector<RsMeshDemocPost> &posts);
-	virtual bool getRelatedReprs(const uint32_t &token, std::vector<RsMeshDemocRepr> &posts);
+	virtual bool getRelatedReprs(const uint32_t &token, std::multimap<RsGxsId, RsMeshDemocRepr *> &reprMap);
 	virtual bool getGxsRelatedVotes(const uint32_t &token, std::multimap<RsGxsMessageId, RsGxsVoteItem *> &voteMap);
 	//virtual bool getRelatedVotes(const uint32_t &token, std::multimap<RsGxsMessageId, RsGxsVoteItem *> &voteMap);
 

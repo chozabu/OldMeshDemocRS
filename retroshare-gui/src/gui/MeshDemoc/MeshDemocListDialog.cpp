@@ -306,19 +306,21 @@ void MeshDemocListDialog::showVotesFromToken(u_int32_t token)
 void MeshDemocListDialog::showReprsFromToken(u_int32_t token)
 {
 	QString messageString;
-	std::vector<RsMeshDemocRepr> representerList;
-	rsMeshDemoc->getRelatedReprs(token, representerList);
+
+	std::multimap<RsGxsId, RsMeshDemocRepr *> reprMap;
+	rsMeshDemoc->getRelatedReprs(token, reprMap);
 	messageString.append(QString("start\n"));
-	messageString.append(QString::number(representerList.size()));
+	messageString.append(QString::number(reprMap.size()));
 	messageString.append(QString(" representors \n"));
 
 
 	RsGxsId authorId;
 	if (!ui.idChooser->getChosenId(authorId)){}
 
-	std::vector<RsMeshDemocRepr>::iterator it;
-	for (it = representerList.begin(); it != representerList.end(); it++){
-		RsMeshDemocRepr item = *it;
+	std::multimap<RsGxsId, RsMeshDemocRepr *>::iterator bmit = reprMap.begin();
+	for(; bmit != reprMap.end(); bmit++)
+	{
+		RsMeshDemocRepr item = *(bmit->second);
 			messageString.append(QString(item.mMeta.mAuthorId.c_str()));
 			messageString.append(QString("-->"));
 			messageString.append(QString(item.mRepresenterId.c_str()));

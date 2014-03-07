@@ -10,6 +10,7 @@
 #include "retroshare/rsgxsifacehelper.h"
 #include "retroshare/rsgxscommon.h"
 #include "serialiser/rsgxscommentitems.h"
+#include "gxs/rsgixs.h"
 
 /* The Main Interface Class - for information about your Posted */
 class RsMeshDemoc;
@@ -63,7 +64,7 @@ virtual ~RsMeshDemoc() { return; }
 virtual bool getGroupData(const uint32_t &token, std::vector<RsMeshDemocGroup> &groups) = 0;
 virtual bool getPostData(const uint32_t &token, std::vector<RsMeshDemocPost> &posts) = 0;
 	virtual bool getRelatedPosts(const uint32_t &token, std::vector<RsMeshDemocPost> &posts) = 0;
-	virtual bool getRelatedReprs(const uint32_t &token, std::vector<RsMeshDemocRepr> &posts) = 0;
+	virtual bool getRelatedReprs(const uint32_t &token, std::multimap<RsGxsId, RsMeshDemocRepr *> &reprMap) = 0;
 	virtual bool getRelatedVotes(const uint32_t &token, std::multimap<RsGxsMessageId, RsGxsVoteItem *> &voteMap) = 0;
 
 	    /* From RsGxsCommentService */
