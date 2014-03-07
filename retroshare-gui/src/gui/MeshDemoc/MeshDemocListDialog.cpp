@@ -361,20 +361,31 @@ void MeshDemocListDialog::showVotesFromToken(u_int32_t token)
 	for (it = voteMap.begin(); it != voteMap.end(); it++){
 		RsGxsVoteItem* item = it->second;
 
+		gxsIdReprMmap::iterator rit;
+		std::pair<gxsIdReprMmap::iterator, gxsIdReprMmap::iterator> rits = mCurrTopicReprs.equal_range(item->meta.mAuthorId);
+
+		for (rit = rits.first;rit != rits.second; rit++){
+			RsMeshDemocRepr repitem = *(rit->second);
+			if(item->meta.mAuthorId.compare(repitem.mRepresenterId)==0){
+
+				messageString.append(QString(repitem.mMeta.mAuthorId.c_str()));
+				messageString.append(QString(" and "));
+			}
+		}
 		if (item->mMsg.mVoteType == GXS_VOTE_UP)
 		{
 			messageString.append(QString(item->meta.mAuthorId.c_str()));
 			messageString.append(QString(" votes up @ "));
 			messageString.append(QString::number(item->meta.mPublishTs));
-			messageString.append(QString("\n"));
 		}
 		else
 		{
 			messageString.append(QString(item->meta.mAuthorId.c_str()));
 			messageString.append(QString(" votes down @ "));
 			messageString.append(QString::number(item->meta.mPublishTs));
-			messageString.append(QString("\n"));
 		}
+		messageString.append(QString("\n"));
+		messageString.append(QString("\n"));
 	}
 	messageString.append(QString("end\n"));
 	QMessageBox::information(NULL, "votes!", messageString);
