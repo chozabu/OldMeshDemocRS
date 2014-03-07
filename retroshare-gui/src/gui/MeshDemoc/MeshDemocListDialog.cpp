@@ -225,6 +225,7 @@ void MeshDemocListDialog::newSubTopic()
     cf.exec ();
 
 }
+//DEACTIVATED - select representitive dialog
 void MeshDemocListDialog::newRepresentitive()
 {
     std::cerr << "mCurrTopicId: " << mCurrTopicId << std::endl;
@@ -242,6 +243,7 @@ void MeshDemocListDialog::newRepresentitive()
 
 }
 
+//request vote information
 void MeshDemocListDialog::showVotes(RsGxsGrpMsgIdPair msgID)
 {
 
@@ -254,100 +256,7 @@ void MeshDemocListDialog::showVotes(RsGxsGrpMsgIdPair msgID)
 	mMeshDemocQueue->requestMsgRelatedInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, msgIds, TOKENREQ_MSGRELATEDINFO);
 }
 
-void MeshDemocListDialog::selectRepr(std::string reprId){
-
-	RsGxsId authorId;
-	if (!ui.idChooser->getChosenId(authorId))//get Authors ID
-	{
-		std::cerr << "MeshDemocCreatePostDialog::createPost() ERROR GETTING AuthorId!, Post Failed";
-		std::cerr << std::endl;
-
-		QMessageBox::warning(this, tr("RetroShare"),tr("Please create or choose a Signing Id first"), QMessageBox::Ok, QMessageBox::Ok);
-
-		return;
-	}
-
-	RsMeshDemocRepr rep;
-	rep.mMeta.mGroupId = mCurrTopicId;
-	rep.mRepresenterId = reprId;
-	rep.mMeta.mMsgName = std::string("repritem");//is this needed?
-	rep.mMeta.mAuthorId = authorId;
-
-	uint32_t token;
-	rsMeshDemoc->createRepr(token,rep);
-	mMeshDemocQueue->queueRequest(token, TOKENREQ_MSGINFO, RS_TOKREQ_ANSTYPE_ACK, TOKEN_USER_TYPE_REPR);
-
-
-	QString authorStr;
-	std::list<QIcon> icons;
-	GxsIdDetails::MakeIdDesc(authorId, false, authorStr, icons);
-
-	QString representerStr;
-	GxsIdDetails::MakeIdDesc(reprId, false, representerStr, icons);
-
-	QString amsg = "Congratulations ";
-	amsg.append( authorStr);
-	amsg.append(". You have chosen ");
-	amsg.append( representerStr);
-	amsg.append(" as your representitive for this topic");
-
-	QMessageBox::information(NULL,tr("Representitive chosen"),amsg) ;
-
-}
-
-void MeshDemocListDialog::showCurrentReprs()
-{
-
-	QString messageString;
-	messageString.append(QString("start\n"));
-	messageString.append(QString::number(mCurrTopicReprs.size()));
-	messageString.append(QString(" representors \n"));
-
-	//RsGxsId authorId;
-	//if (!ui.idChooser->getChosenId(authorId)){}
-	//ui.representitiveLabel->setText(QString("No Representer"));
-
-	gxsIdReprMmap::iterator bmit = mCurrTopicReprs.begin();
-	for(; bmit != mCurrTopicReprs.end(); bmit++)
-	{
-		RsMeshDemocRepr item = *(bmit->second);
-
-
-		QString authorStr;
-		QString representerStr;
-		std::list<QIcon> icons;
-		bool loaded = GxsIdDetails::MakeIdDesc(item.mMeta.mAuthorId, false, authorStr, icons);
-		loaded &= GxsIdDetails::MakeIdDesc(item.mRepresenterId, false, representerStr, icons);
-
-		messageString.append(QString(item.mMeta.mAuthorId.c_str()));
-		messageString.append(authorStr);
-			messageString.append(QString(" represented by"));
-			messageString.append(QString(item.mRepresenterId.c_str()));
-			messageString.append(representerStr);
-			messageString.append(QString("\n"));
-
-	}
-	messageString.append(QString("end\n"));
-	QMessageBox::information(NULL, "representations!", messageString);
-}
-
-void MeshDemocListDialog::showReprs(RsGxsGroupId groupId)
-{
-	RsTokReqOptions opts;
-
-	opts.mReqType = GXS_REQUEST_TYPE_MSG_DATA;
-	opts.mOptions = RS_TOKREQOPT_MSG_LATEST;
-
-	std::list<RsGxsGroupId> grpIds;
-	grpIds.push_back(groupId);
-
-	std::cerr << "MeshDemocListDialog::showReprs(" << groupId << ")";
-	std::cerr << std::endl;
-
-	uint32_t token;
-	mMeshDemocQueue->requestMsgInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, grpIds, TOKEN_USER_TYPE_REPR);
-}
-
+// called from loadRequest TOKENREQ_MSGRELATEDINFO - RS_TOKREQ_ANSTYPE_DATA (should change token)
 void MeshDemocListDialog::showVotesFromToken(u_int32_t token)
 {
 	QString messageString;
@@ -390,6 +299,105 @@ void MeshDemocListDialog::showVotesFromToken(u_int32_t token)
 	messageString.append(QString("end\n"));
 	QMessageBox::information(NULL, "votes!", messageString);
 }
+
+//publish new representation token for current group
+void MeshDemocListDialog::selectRepr(std::string reprId){
+
+	RsGxsId authorId;
+	if (!ui.idChooser->getChosenId(authorId))//get Authors ID
+	{
+		std::cerr << "MeshDemocCreatePostDialog::createPost() ERROR GETTING AuthorId!, Post Failed";
+		std::cerr << std::endl;
+
+		QMessageBox::warning(this, tr("RetroShare"),tr("Please create or choose a Signing Id first"), QMessageBox::Ok, QMessageBox::Ok);
+
+		return;
+	}
+
+	RsMeshDemocRepr rep;
+	rep.mMeta.mGroupId = mCurrTopicId;
+	rep.mRepresenterId = reprId;
+	rep.mMeta.mMsgName = std::string("repritem");//is this needed?
+	rep.mMeta.mAuthorId = authorId;
+
+	uint32_t token;
+	rsMeshDemoc->createRepr(token,rep);
+	mMeshDemocQueue->queueRequest(token, TOKENREQ_MSGINFO, RS_TOKREQ_ANSTYPE_ACK, TOKEN_USER_TYPE_REPR);
+
+
+	QString authorStr;
+	std::list<QIcon> icons;
+	GxsIdDetails::MakeIdDesc(authorId, false, authorStr, icons);
+
+	QString representerStr;
+	GxsIdDetails::MakeIdDesc(reprId, false, representerStr, icons);
+
+	QString amsg = "Congratulations ";
+	amsg.append( authorStr);
+	amsg.append(". You have chosen ");
+	amsg.append( representerStr);
+	amsg.append(" as your representitive for this topic");
+
+	QMessageBox::information(NULL,tr("Representitive chosen"),amsg) ;
+
+}
+
+//display cached Representation information
+void MeshDemocListDialog::showCurrentReprs()
+{
+
+	QString messageString;
+	messageString.append(QString("start\n"));
+	messageString.append(QString::number(mCurrTopicReprs.size()));
+	messageString.append(QString(" representors \n"));
+
+	//RsGxsId authorId;
+	//if (!ui.idChooser->getChosenId(authorId)){}
+	//ui.representitiveLabel->setText(QString("No Representer"));
+
+	gxsIdReprMmap::iterator bmit = mCurrTopicReprs.begin();
+	for(; bmit != mCurrTopicReprs.end(); bmit++)
+	{
+		RsMeshDemocRepr item = *(bmit->second);
+
+
+		QString authorStr;
+		QString representerStr;
+		std::list<QIcon> icons;
+		bool loaded = GxsIdDetails::MakeIdDesc(item.mMeta.mAuthorId, false, authorStr, icons);
+		loaded &= GxsIdDetails::MakeIdDesc(item.mRepresenterId, false, representerStr, icons);
+
+		messageString.append(QString(item.mMeta.mAuthorId.c_str()));
+		messageString.append(authorStr);
+			messageString.append(QString(" represented by"));
+			messageString.append(QString(item.mRepresenterId.c_str()));
+			messageString.append(representerStr);
+			messageString.append(QString("\n"));
+
+	}
+	messageString.append(QString("end\n"));
+	QMessageBox::information(NULL, "representations!", messageString);
+}
+
+//request representation information
+void MeshDemocListDialog::showReprs(RsGxsGroupId groupId)
+{
+	RsTokReqOptions opts;
+
+	opts.mReqType = GXS_REQUEST_TYPE_MSG_DATA;
+	opts.mOptions = RS_TOKREQOPT_MSG_LATEST;
+
+	std::list<RsGxsGroupId> grpIds;
+	grpIds.push_back(groupId);
+
+	std::cerr << "MeshDemocListDialog::showReprs(" << groupId << ")";
+	std::cerr << std::endl;
+
+	uint32_t token;
+	mMeshDemocQueue->requestMsgInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, grpIds, TOKEN_USER_TYPE_REPR);
+}
+
+//called from loadRequest for TOKEN_USER_TYPE_REPR - RS_TOKREQ_ANSTYPE_DATA
 void MeshDemocListDialog::showReprsFromToken(u_int32_t token)
 {
 
@@ -401,6 +409,7 @@ void MeshDemocListDialog::showReprsFromToken(u_int32_t token)
 	if (!ui.idChooser->getChosenId(authorId)){}
 	ui.representitiveLabel->setText(QString("No Representer"));
 
+	//loop through representations to find own (this could be done with the reverseDict in getRelatedReprs)
 	gxsIdReprMmap::iterator bmit = mCurrTopicReprs.begin();
 	for(; bmit != mCurrTopicReprs.end(); bmit++)
 	{
