@@ -350,7 +350,7 @@ void MeshDemocListDialog::showReprsFromToken(u_int32_t token)
 			if (item.mMeta.mAuthorId.compare(authorId) == 0){
 				QString desc;
 				std::list<QIcon> icons;
-				bool loaded = GxsIdDetails::MakeIdDesc(authorId, false, desc, icons);
+				bool loaded = GxsIdDetails::MakeIdDesc(bmit->first, false, desc, icons);
 				ui.representitiveLabel->setText(QString(desc));
 			}
 	}
