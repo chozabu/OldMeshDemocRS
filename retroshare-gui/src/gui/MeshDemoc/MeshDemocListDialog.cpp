@@ -255,7 +255,34 @@ void MeshDemocListDialog::showVotes(RsGxsGrpMsgIdPair msgID)
 
 void MeshDemocListDialog::showCurrentReprs()
 {
-	showReprs(mCurrTopicId);
+
+	QString messageString;
+	messageString.append(QString("start\n"));
+	messageString.append(QString::number(mCurrTopicReprs.size()));
+	messageString.append(QString(" representors \n"));
+
+	//RsGxsId authorId;
+	//if (!ui.idChooser->getChosenId(authorId)){}
+	//ui.representitiveLabel->setText(QString("No Representer"));
+
+	std::multimap<RsGxsId, RsMeshDemocRepr *>::iterator bmit = mCurrTopicReprs.begin();
+	for(; bmit != mCurrTopicReprs.end(); bmit++)
+	{
+		RsMeshDemocRepr item = *(bmit->second);
+			messageString.append(QString(item.mMeta.mAuthorId.c_str()));
+			messageString.append(QString("-->"));
+			messageString.append(QString(item.mRepresenterId.c_str()));
+			messageString.append(QString("\n"));
+
+			/*if (item.mMeta.mAuthorId.compare(authorId) == 0){
+				QString desc;
+				std::list<QIcon> icons;
+				bool loaded = GxsIdDetails::MakeIdDesc(authorId, false, desc, icons);
+				ui.representitiveLabel->setText(QString(desc));
+			}*/
+	}
+	messageString.append(QString("end\n"));
+	QMessageBox::information(NULL, "representations!", messageString);
 }
 
 void MeshDemocListDialog::showReprs(RsGxsGroupId groupId)
@@ -307,15 +334,10 @@ void MeshDemocListDialog::showVotesFromToken(u_int32_t token)
 }
 void MeshDemocListDialog::showReprsFromToken(u_int32_t token)
 {
-	QString messageString;
 
 	std::multimap<RsGxsId, RsMeshDemocRepr *> reprMap;
 	rsMeshDemoc->getRelatedReprs(token, reprMap);
 	mCurrTopicReprs = reprMap;
-	messageString.append(QString("start\n"));
-	messageString.append(QString::number(mCurrTopicReprs.size()));
-	messageString.append(QString(" representors \n"));
-
 
 	RsGxsId authorId;
 	if (!ui.idChooser->getChosenId(authorId)){}
@@ -325,20 +347,13 @@ void MeshDemocListDialog::showReprsFromToken(u_int32_t token)
 	for(; bmit != mCurrTopicReprs.end(); bmit++)
 	{
 		RsMeshDemocRepr item = *(bmit->second);
-			messageString.append(QString(item.mMeta.mAuthorId.c_str()));
-			messageString.append(QString("-->"));
-			messageString.append(QString(item.mRepresenterId.c_str()));
-
 			if (item.mMeta.mAuthorId.compare(authorId) == 0){
 				QString desc;
 				std::list<QIcon> icons;
 				bool loaded = GxsIdDetails::MakeIdDesc(authorId, false, desc, icons);
 				ui.representitiveLabel->setText(QString(desc));
 			}
-			messageString.append(QString("\n"));
 	}
-	messageString.append(QString("end\n"));
-	//QMessageBox::information(NULL, "representations!", messageString);
 }
 
 void MeshDemocListDialog::newPost()
