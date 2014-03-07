@@ -307,7 +307,7 @@ void MeshDemocListDialog::showCurrentReprs()
 	//if (!ui.idChooser->getChosenId(authorId)){}
 	//ui.representitiveLabel->setText(QString("No Representer"));
 
-	std::multimap<RsGxsId, RsMeshDemocRepr *>::iterator bmit = mCurrTopicReprs.begin();
+	gxsIdReprMmap::iterator bmit = mCurrTopicReprs.begin();
 	for(; bmit != mCurrTopicReprs.end(); bmit++)
 	{
 		RsMeshDemocRepr item = *(bmit->second);
@@ -351,15 +351,16 @@ void MeshDemocListDialog::showReprs(RsGxsGroupId groupId)
 void MeshDemocListDialog::showVotesFromToken(u_int32_t token)
 {
 	QString messageString;
-	std::multimap<RsGxsMessageId, RsGxsVoteItem *> voteMap;
+	msgVoteMmap voteMap;
 	rsMeshDemoc->getRelatedVotes(token, voteMap);
-	std::multimap<RsGxsMessageId, RsGxsVoteItem *>::iterator it;
+	msgVoteMmap::iterator it;
 	messageString.append(QString("start\n"));
 	messageString.append(QString::number(voteMap.size()));
 	messageString.append(QString(" votes \n"));
 
 	for (it = voteMap.begin(); it != voteMap.end(); it++){
 		RsGxsVoteItem* item = it->second;
+
 		if (item->mMsg.mVoteType == GXS_VOTE_UP)
 		{
 			messageString.append(QString(item->meta.mAuthorId.c_str()));
@@ -381,7 +382,7 @@ void MeshDemocListDialog::showVotesFromToken(u_int32_t token)
 void MeshDemocListDialog::showReprsFromToken(u_int32_t token)
 {
 
-	std::multimap<RsGxsId, RsMeshDemocRepr *> reprMap;
+	gxsIdReprMmap reprMap;
 	rsMeshDemoc->getRelatedReprs(token, reprMap);
 	mCurrTopicReprs = reprMap;
 
@@ -389,7 +390,7 @@ void MeshDemocListDialog::showReprsFromToken(u_int32_t token)
 	if (!ui.idChooser->getChosenId(authorId)){}
 	ui.representitiveLabel->setText(QString("No Representer"));
 
-	std::multimap<RsGxsId, RsMeshDemocRepr *>::iterator bmit = mCurrTopicReprs.begin();
+	gxsIdReprMmap::iterator bmit = mCurrTopicReprs.begin();
 	for(; bmit != mCurrTopicReprs.end(); bmit++)
 	{
 		RsMeshDemocRepr item = *(bmit->second);

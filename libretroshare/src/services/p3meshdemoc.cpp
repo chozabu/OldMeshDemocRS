@@ -172,7 +172,7 @@ bool p3MeshDemoc::getRelatedPosts(const uint32_t &token, std::vector<RsMeshDemoc
 
 
 
-bool p3MeshDemoc::getRelatedReprs(const uint32_t &token, std::multimap<RsGxsId, RsMeshDemocRepr *> &reprMap)
+bool p3MeshDemoc::getRelatedReprs(const uint32_t &token, gxsIdReprMmap &reprMap)
 {
 	GxsMsgDataMap msgData;
 	bool ok = RsGenExchange::getMsgData(token, msgData);
@@ -227,7 +227,7 @@ bool p3MeshDemoc::getRelatedReprs(const uint32_t &token, std::multimap<RsGxsId, 
 	return ok;
 }
 
-bool p3MeshDemoc::getGxsRelatedVotes(const uint32_t &token, std::multimap<RsGxsMessageId, RsGxsVoteItem *> &voteMap)
+bool p3MeshDemoc::getGxsRelatedVotes(const uint32_t &token, msgVoteMmap &voteMap)
 {
 	std::cerr << "\n\n---\n\np3GxsCommentService::getGxsRelatedVotes()";
 	std::cerr << std::endl;
