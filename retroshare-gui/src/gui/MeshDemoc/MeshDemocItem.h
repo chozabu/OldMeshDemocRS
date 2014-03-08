@@ -42,6 +42,7 @@ public:
 	const RsMeshDemocPost &getPost() const;
 	RsMeshDemocPost &post();
 	void setContent(const RsMeshDemocPost& post);
+	RsMeshDemocPost *getContent();
 
 private slots:
 	void loadComments();

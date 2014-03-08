@@ -79,6 +79,10 @@ void MeshDemocItem::loadMessage(const uint32_t &token)
 	mPost = posts[0];
 	setContent(mPost);
 }
+RsMeshDemocPost* MeshDemocItem::getContent()
+{
+	return &mPost;
+}
 
 void MeshDemocItem::setContent(const RsMeshDemocPost &post)
 {

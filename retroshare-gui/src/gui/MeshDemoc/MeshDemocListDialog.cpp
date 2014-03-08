@@ -267,18 +267,22 @@ void MeshDemocListDialog::showVotesFromToken(u_int32_t token)
 	messageString.append(QString::number(voteMap.size()));
 	messageString.append(QString(" votes \n"));
 
+	RsGxsMessageId mid;
+	int score = 0;
 	for (it = voteMap.begin(); it != voteMap.end(); it++){
 		RsGxsVoteItem* item = it->second;
-
+		mid = it->first;
 		gxsIdReprMmap::iterator rit;
 		std::pair<gxsIdReprMmap::iterator, gxsIdReprMmap::iterator> rits = mCurrTopicReprs.equal_range(item->meta.mAuthorId);
 
+		int mod = 1;
 		for (rit = rits.first;rit != rits.second; rit++){
 			RsMeshDemocRepr repitem = *(rit->second);
 			if(item->meta.mAuthorId.compare(repitem.mRepresenterId)==0){
 
 				messageString.append(QString(repitem.mMeta.mAuthorId.c_str()));
 				messageString.append(QString(" and "));
+				mod+=1;
 			}
 		}
 		if (item->mMsg.mVoteType == GXS_VOTE_UP)
@@ -286,18 +290,31 @@ void MeshDemocListDialog::showVotesFromToken(u_int32_t token)
 			messageString.append(QString(item->meta.mAuthorId.c_str()));
 			messageString.append(QString(" votes up @ "));
 			messageString.append(QString::number(item->meta.mPublishTs));
+			score+=1*mod;
 		}
 		else
 		{
 			messageString.append(QString(item->meta.mAuthorId.c_str()));
 			messageString.append(QString(" votes down @ "));
 			messageString.append(QString::number(item->meta.mPublishTs));
+			score-=1*mod;
 		}
 		messageString.append(QString("\n"));
 		messageString.append(QString("\n"));
 	}
 	messageString.append(QString("end\n"));
 	QMessageBox::information(NULL, "votes!", messageString);
+
+	// modify post content
+	if(mPosts.find(mid) != mPosts.end())
+	{
+		RsMeshDemocPost p = *(mPosts[mid]->getContent());
+		p.mTopScore = score;
+		std::cerr << "MeshDemocListDialog::updateCurrentDisplayComplete() updating MsgId: " << p.mMeta.mMsgId;
+		std::cerr << std::endl;
+
+		mPosts[mid]->setContent(p);
+	}
 }
 
 //publish new representation token for current group
@@ -409,7 +426,7 @@ void MeshDemocListDialog::showReprsFromToken(u_int32_t token)
 	if (!ui.idChooser->getChosenId(authorId)){}
 	ui.representitiveLabel->setText(QString("No Representer"));
 
-	//loop through representations to find own (this could be done with the reverseDict in getRelatedReprs)
+	//loop through representations to find own (this could be done loopless with the reverseDict in getRelatedReprs)
 	gxsIdReprMmap::iterator bmit = mCurrTopicReprs.begin();
 	for(; bmit != mCurrTopicReprs.end(); bmit++)
 	{
