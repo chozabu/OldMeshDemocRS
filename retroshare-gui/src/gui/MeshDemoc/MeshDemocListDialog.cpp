@@ -303,6 +303,8 @@ void MeshDemocListDialog::showVotesFromToken(u_int32_t token)
 		messageString.append(QString("\n"));
 	}
 	messageString.append(QString("end\n"));
+
+	score = liquidCache.getLiquidVotes(mCurrTopicId,voteMap);
 	QMessageBox::information(NULL, "votes!", messageString);
 
 	// modify post content
@@ -417,10 +419,10 @@ void MeshDemocListDialog::showReprs(RsGxsGroupId groupId)
 //called from loadRequest for TOKEN_USER_TYPE_REPR - RS_TOKREQ_ANSTYPE_DATA
 void MeshDemocListDialog::showReprsFromToken(u_int32_t token)
 {
-
 	gxsIdReprMmap reprMap;
 	rsMeshDemoc->getRelatedReprs(token, reprMap);
 	mCurrTopicReprs = reprMap;
+	liquidCache.convertAddReps(reprMap);
 
 	RsGxsId authorId;
 	if (!ui.idChooser->getChosenId(authorId)){}
@@ -1236,7 +1238,7 @@ void MeshDemocListDialog::insertGroupData(const std::list<RsGroupMetaData> &grou
 	QList<GroupRecurItemInfo> adminList;
 	QList<GroupRecurItemInfo> subList;
 	QList<GroupRecurItemInfo> allList;
-	std::multimap<uint32_t, GroupRecurItemInfo> popMap;
+	//std::multimap<uint32_t, GroupRecurItemInfo> popMap;
 
 	for (it = groupList.begin(); it != groupList.end(); it++) 
 	{
@@ -1258,6 +1260,7 @@ void MeshDemocListDialog::insertGroupData(const std::list<RsGroupMetaData> &grou
 			}
 		}
 		allList.push_back(groupItemInfo);
+		liquidCache.addTopic(it->mGroupId,it->mParentGrpId);
 	}
 
 

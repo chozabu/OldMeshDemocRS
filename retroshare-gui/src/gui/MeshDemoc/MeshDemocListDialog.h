@@ -35,6 +35,8 @@
 #include "gui/gxs/GxsCommentContainer.h"
 #include "gui/feeds/FeedHolder.h"
 
+#include "meshdemoccachetree.h"
+
 class MeshDemocItem;
 
 /*********************** **** **** **** ***********************/
@@ -146,7 +148,6 @@ private:
 private:
 	QTreeWidgetItem *yourTopics;
 	QTreeWidgetItem *subscribedTopics;
-	QTreeWidgetItem *popularTopics;
 	QTreeWidgetItem *allTopics;
 
 	int	mSortMethod;
@@ -157,6 +158,8 @@ private:
 	bool mThreadLoading;
 	RsGxsGroupId mCurrTopicId;
 	gxsIdReprMmap mCurrTopicReprs;
+
+	VoteCache liquidCache;
 
 	QMap<RsGxsGroupId, RsMeshDemocGroup> mGroups;
 	QMap<RsGxsMessageId, MeshDemocItem*> mPosts;

@@ -500,7 +500,8 @@ HEADERS +=  rshare.h \
     gui/MeshDemoc/MeshDemocItem.h \
     gui/MeshDemoc/MeshDemocListDialog.h \
     gui/common/RecurGroupTreeWidget.h \
-    gui/MeshDemoc/SelectRepresentitiveDialog.h
+    gui/MeshDemoc/SelectRepresentitiveDialog.h \
+    gui/MeshDemoc/meshdemoccachetree.h
 
 #            gui/ForumsDialog.h \
 #            gui/forums/ForumDetails.h \
@@ -822,7 +823,8 @@ SOURCES +=  main.cpp \
     gui/MeshDemoc/MeshDemocListDialog.cpp \
     gui/MeshDemoc/MeshDemocItem.cpp \
     gui/common/RecurGroupTreeWidget.cpp \
-    gui/MeshDemoc/SelectRepresentitiveDialog.cpp
+    gui/MeshDemoc/SelectRepresentitiveDialog.cpp \
+    gui/MeshDemoc/meshdemoccachetree.cpp
 
 #            gui/ForumsDialog.cpp \
 #            gui/forums/ForumDetails.cpp \
