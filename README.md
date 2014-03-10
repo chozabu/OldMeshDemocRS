@@ -18,11 +18,12 @@ Initial TODO (in approx order):
 4. ~~Posting - clone basic posted links posting system and GUI~~
 5. ~~finish (4.) - including to port/enable comment system~~
 6. ~~Representation - Add a way to select a representitive for a topic~~
-7. Take representation tree into account when counting votes for a post or comment
-8. Build Representation Tree Model, data and visual
+8. ~~Build Representation Tree Model~~
+7. ~~Take representation tree into account when counting votes for a post or comment~~
 
 further TODO:
 
+1. show visual representation tree
 1. improve security (strong vote checking)
 2. caching - lots of it.
 3. deal with old representation items (delete?)
