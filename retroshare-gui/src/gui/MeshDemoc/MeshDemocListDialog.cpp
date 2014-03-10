@@ -259,16 +259,18 @@ void MeshDemocListDialog::showVotes(RsGxsGrpMsgIdPair msgID)
 // called from loadRequest TOKENREQ_MSGRELATEDINFO - RS_TOKREQ_ANSTYPE_DATA (should change token)
 void MeshDemocListDialog::showVotesFromToken(u_int32_t token)
 {
-	QString messageString;
 	msgVoteMmap voteMap;
 	rsMeshDemoc->getRelatedVotes(token, voteMap);
-	msgVoteMmap::iterator it;
+	if(voteMap.size() == 0)return;
+
+	/*QString messageString;
 	messageString.append(QString("start\n"));
 	messageString.append(QString::number(voteMap.size()));
-	messageString.append(QString(" votes \n"));
+	messageString.append(QString(" votes \n"));*/
 
-	RsGxsMessageId mid;
 	int score = 0;
+	RsGxsMessageId mid = voteMap.begin()->first;
+	/*msgVoteMmap::iterator it;
 	for (it = voteMap.begin(); it != voteMap.end(); it++){
 		RsGxsVoteItem* item = it->second;
 		mid = it->first;
@@ -302,10 +304,10 @@ void MeshDemocListDialog::showVotesFromToken(u_int32_t token)
 		messageString.append(QString("\n"));
 		messageString.append(QString("\n"));
 	}
-	messageString.append(QString("end\n"));
+	messageString.append(QString("end\n"));*/
 
 	score = liquidCache.getLiquidVotes(mCurrTopicId,voteMap);
-	QMessageBox::information(NULL, "votes!", messageString);
+	//QMessageBox::information(NULL, "votes!", messageString);
 
 	// modify post content
 	if(mPosts.find(mid) != mPosts.end())
@@ -843,6 +845,11 @@ void MeshDemocListDialog::loadPost(const RsMeshDemocPost &post)
 	//QLayout *alayout = ui.scrollAreaWidgetContents->layout();
 	//alayout->addWidget(item);
 	mPostList.push_back(item);
+
+	RsGxsGrpMsgIdPair msgId;
+	msgId.first = post.mMeta.mGroupId;
+	msgId.second = post.mMeta.mMsgId;
+	showVotes(msgId);
 }
 
 bool CmpPIHot(const MeshDemocItem *a, const MeshDemocItem *b)
