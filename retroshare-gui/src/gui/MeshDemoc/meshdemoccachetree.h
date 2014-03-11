@@ -2,13 +2,6 @@
 #define MESHDEMOCCACHETREE_H
 
 #include "retroshare/rsmeshdemoc.h"
-class MeshDemocCacheTree
-{
-public:
-	MeshDemocCacheTree();
-};
-
-
 
 #include <iostream>
 #include <string>

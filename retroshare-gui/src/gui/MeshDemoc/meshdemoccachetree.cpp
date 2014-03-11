@@ -1,12 +1,5 @@
 #include "meshdemoccachetree.h"
 
-
-MeshDemocCacheTree::MeshDemocCacheTree()
-{
-	gxsIdReprMmap a;
-}
-
-
 bool VoteCache::addTopic(groupId topicID, groupId parentID){
 
 	TopicDict::iterator ti = topicDict.find(topicID);
