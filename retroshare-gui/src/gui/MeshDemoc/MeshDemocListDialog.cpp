@@ -29,12 +29,14 @@
 #include "MeshDemocItem.h"
 #include "MeshDemocUserTypes.h"
 #include "SelectRepresentitiveDialog.h"
+#include "meshdemocsankeyvote.h"
 #include "gui/gxs/GxsIdDetails.h"
 
 #include <iostream>
 
 #include <QMenu>
 #include <QMessageBox>
+#include <QMainWindow>
 
 /****************************************************************
  */
@@ -253,7 +255,7 @@ void MeshDemocListDialog::showVotes(RsGxsGrpMsgIdPair msgID)
 	std::vector<RsGxsGrpMsgIdPair> msgIds;
 	msgIds.push_back(msgID);
 	uint32_t token;
-	mMeshDemocQueue->requestMsgRelatedInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, msgIds, TOKENREQ_MSGRELATEDINFO);
+	mMeshDemocQueue->requestMsgRelatedInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, msgIds, TOKEN_USER_TYPE_VOTE_UPDATE);
 }
 
 // called from loadRequest TOKENREQ_MSGRELATEDINFO - RS_TOKREQ_ANSTYPE_DATA (should change token)
@@ -307,6 +309,7 @@ void MeshDemocListDialog::showVotesFromToken(u_int32_t token)
 	messageString.append(QString("end\n"));*/
 
 	score = liquidCache.getLiquidVotes(mCurrTopicId,voteMap);
+	liquidCache.getQMap(mCurrTopicId,voteMap);
 	//QMessageBox::information(NULL, "votes!", messageString);
 
 	// modify post content
@@ -319,6 +322,36 @@ void MeshDemocListDialog::showVotesFromToken(u_int32_t token)
 
 		mPosts[mid]->setContent(p);
 	}
+}
+
+//request vote information
+void MeshDemocListDialog::showVoteChart(RsGxsGrpMsgIdPair msgID)
+{
+
+	RsTokReqOptions opts;
+	opts.mReqType = GXS_REQUEST_TYPE_MSG_RELATED_DATA;
+	opts.mOptions = RS_TOKREQOPT_MSG_PARENT | RS_TOKREQOPT_MSG_LATEST;
+	std::vector<RsGxsGrpMsgIdPair> msgIds;
+	msgIds.push_back(msgID);
+	uint32_t token;
+	mMeshDemocQueue->requestMsgRelatedInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, msgIds, TOKEN_USER_TYPE_VOTE_CHART);
+}
+
+// called from loadRequest TOKENREQ_MSGRELATEDINFO - RS_TOKREQ_ANSTYPE_DATA (should change token)
+void MeshDemocListDialog::showVoteChartFromToken(u_int32_t token)
+{
+	msgVoteMmap voteMap;
+	rsMeshDemoc->getRelatedVotes(token, voteMap);
+	if(voteMap.size() == 0)return;
+
+	QVariantMap* qm = liquidCache.getQMap(mCurrTopicId,voteMap);
+
+	MeshDemocSankeyVote* msv = new MeshDemocSankeyVote();
+	msv->show();
+	msv->setVoteData(*qm);
+
+	msv->setUrl(QUrl("qrc:/html/sankeyvote.html"));
+	QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 }
 
 //publish new representation token for current group
@@ -368,9 +401,9 @@ void MeshDemocListDialog::showCurrentReprs()
 {
 
 	QString messageString;
-	messageString.append(QString("start\n"));
+	//messageString.append(QString("start\n"));
 	messageString.append(QString::number(mCurrTopicReprs.size()));
-	messageString.append(QString(" representors \n"));
+	messageString.append(QString(" representors \n\n"));
 
 	//RsGxsId authorId;
 	//if (!ui.idChooser->getChosenId(authorId)){}
@@ -388,15 +421,15 @@ void MeshDemocListDialog::showCurrentReprs()
 		bool loaded = GxsIdDetails::MakeIdDesc(item.mMeta.mAuthorId, false, authorStr, icons);
 		loaded &= GxsIdDetails::MakeIdDesc(item.mRepresenterId, false, representerStr, icons);
 
-		messageString.append(QString(item.mMeta.mAuthorId.c_str()));
+		//messageString.append(QString(item.mMeta.mAuthorId.c_str()));
 		messageString.append(authorStr);
-			messageString.append(QString(" represented by"));
-			messageString.append(QString(item.mRepresenterId.c_str()));
+			messageString.append(QString(" represented by "));
+			//messageString.append(QString(item.mRepresenterId.c_str()));
 			messageString.append(representerStr);
-			messageString.append(QString("\n"));
+			messageString.append(QString("\n\n"));
 
 	}
-	messageString.append(QString("end\n"));
+	//messageString.append(QString("end\n"));
 	QMessageBox::information(NULL, "representations!", messageString);
 }
 
@@ -839,7 +872,7 @@ void MeshDemocListDialog::loadPost(const RsMeshDemocPost &post)
 {
 	MeshDemocItem *item = new MeshDemocItem(this, 0, post, true);
 	connect(item, SIGNAL(vote(RsGxsGrpMsgIdPair,bool)), this, SLOT(submitVote(RsGxsGrpMsgIdPair,bool)));
-	connect(item, SIGNAL(votesReq(RsGxsGrpMsgIdPair)), this, SLOT(showVotes(RsGxsGrpMsgIdPair)));
+	connect(item, SIGNAL(votesReq(RsGxsGrpMsgIdPair)), this, SLOT(showVoteChart(RsGxsGrpMsgIdPair)));
 	connect(item, SIGNAL(reprReq(std::string)), this, SLOT(selectRepr(std::string)));
 	mPosts.insert(post.mMeta.mMsgId, item);
 	//QLayout *alayout = ui.scrollAreaWidgetContents->layout();
@@ -1167,16 +1200,26 @@ void MeshDemocListDialog::loadRequest(const TokenQueue *queue, const TokenReques
 						break;
 				}
 				break;
-			case TOKENREQ_MSGRELATEDINFO:
+			case TOKEN_USER_TYPE_VOTE_CHART:
 				switch(req.mAnsType)
 				{
 					case RS_TOKREQ_ANSTYPE_DATA:
-						showVotesFromToken(req.mToken);
+						showVoteChartFromToken(req.mToken);
 						break;
 					default:
 						std::cerr << "Error, unexpected anstype:" << req.mAnsType << std::endl;
 						break;
 				}
+		case TOKEN_USER_TYPE_VOTE_UPDATE:
+			switch(req.mAnsType)
+			{
+				case RS_TOKREQ_ANSTYPE_DATA:
+					showVotesFromToken(req.mToken);
+					break;
+				default:
+					std::cerr << "Error, unexpected anstype:" << req.mAnsType << std::endl;
+					break;
+			}
 			case TOKEN_USER_TYPE_POST_MOD:
 				switch(req.mAnsType)
 				{

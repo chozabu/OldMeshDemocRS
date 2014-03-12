@@ -28,6 +28,113 @@ void VoteCache::convertAddReps(gxsIdReprMmap repMap){
 	}
 }
 
+
+QVariantMap* VoteCache::getQMap(groupId vTopic, msgVoteMmap voteMap){
+	QVariantMap* qm = new QVariantMap();
+	QVariantList nodes;
+	QHash<QString, int> nodemap;
+	QVariantList links;
+
+	QVariantMap noNode;
+	noNode.insert(QString::fromStdString("name"),"No");
+	nodes.append(noNode);
+	QVariantMap yesNode;
+	yesNode.insert(QString::fromStdString("name"),"Yes");
+	nodes.append(yesNode);
+
+	directVoted.clear();
+	liquidVoted.clear();
+	int directscore = 0;
+	int liquidscore = 0;
+
+	//count direct votes
+	msgVoteMmap::iterator it;
+	for (it = voteMap.begin(); it != voteMap.end(); it++){
+		RsGxsVoteItem* item = it->second;
+		int vval = item->mMsg.mVoteType == GXS_VOTE_UP ? 1 : -1;
+		directscore+=vval;
+		directVoted.insert(item->meta.mAuthorId);
+
+		QVariantMap node;
+		node.insert("name",QString::fromStdString(item->meta.mAuthorId));
+		nodes.append(node);
+
+		nodemap.insert(QString::fromStdString(item->meta.mAuthorId),nodes.size()-1);
+	}
+	std::cerr << "directscore" << directscore << std::endl;
+
+
+	//count representees recursivly
+	for (it = voteMap.begin(); it != voteMap.end(); it++){
+		std::cerr << "votemapITEM" << std::endl;
+		RsGxsVoteItem* item = it->second;
+		int vval = -1;if (item->mMsg.mVoteType == GXS_VOTE_UP) vval = 1;
+		int thisscore = vval*getLiquidQMap(it->second->meta.mAuthorId, vTopic, nodes, links, nodemap);
+		liquidscore+=thisscore;
+
+		int ynIndex = item->mMsg.mVoteType == GXS_VOTE_UP ? 1 : 0;
+		QVariantMap link;
+		link.insert("source",nodemap[QString::fromStdString(item->meta.mAuthorId)]);
+		link.insert("target",ynIndex);
+		link.insert("value",thisscore+1);
+		links.append(link);
+	}
+
+	qm->insert("nodes", nodes);
+	qm->insert("links", links);
+	return qm;
+}
+
+int VoteCache::getLiquidQMap(gxsId voterID, groupId topicID, QVariantList& nodes, QVariantList& links, QHash<QString, int>& nodemap){
+	int topicScore=0;
+	TopicDict::iterator tv = topicDict.find(topicID);
+	TopicVoteCache *tvc = tv->second;
+	if (tv != topicDict.end()){
+		TopicDict::iterator tp = topicDict.find(tvc->parentId);
+		if (tp != topicDict.end()){
+			topicScore+=getLiquidQMap(voterID, topicDict[topicID]->parentId, nodes, links, nodemap);
+		}
+
+		if(tvc->representerMap.find(voterID) == tvc->representerMap.end()){
+			std::cerr << "\n\nREPRESENTER NOT found \n\n";
+		} else {
+			std::cerr << "\n representer FOUND\n";
+
+		}
+		RepTeeMap representees = tvc->representerMap[voterID].representees;
+		std::cerr << "\n representees count:\n" << representees.size()<< "\n";
+		RepTeeMap::iterator ri = representees.begin();
+		for (;ri != representees.end(); ri++){//for(representee in tvc->representerMap.find(voterID)){
+			gxsId representee = ri->first;
+			if (directVoted.count(representee) > 0) continue;
+			if (liquidVoted.count(representee) > 0){
+				//std::cerr << "Representee: "+representee+" already counted, skipping (check timestamps?)" << std::endl;
+				continue;
+			}
+			topicScore+=1;
+			liquidVoted.insert(representee);
+			if (tp != topicDict.end())
+				topicScore+=getLiquidQMap(representee, tvc->parentId, nodes, links, nodemap);
+
+			QVariantMap node;
+			node.insert(QString::fromStdString("name"),QString::fromStdString(representee));
+			nodes.append(node);
+			nodemap.insert(QString::fromStdString(representee),nodes.size()-1);
+
+			QVariantMap link;
+			link.insert(QString::fromStdString("source"),nodemap[QString::fromStdString(representee)]);
+			link.insert(QString::fromStdString("target"),nodemap[QString::fromStdString(voterID)]);
+			link.insert(QString::fromStdString("value"),topicScore);
+			links.append(link);
+
+
+		}
+	}else{
+		std::cout << "TOPIC NOT FOUND \n";
+	}
+	return topicScore;
+}
+
 int VoteCache::getLiquidVotes(groupId vTopic,msgVoteMmap voteMap){
 	std::cerr << "" << std::endl;
 	std::cerr << "Counting votes in " << vTopic << std::endl;

@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>html/d3.v2.min.js</file>
+        <file>html/sankey.js</file>
+        <file>html/sankeyvote.html</file>
+    </qresource>
+</RCC>

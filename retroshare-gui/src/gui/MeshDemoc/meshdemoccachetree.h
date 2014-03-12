@@ -7,6 +7,8 @@
 #include <string>
 #include <map>
 #include <set>
+#include <QVariantMap>
+#include <QVariantList>
 using namespace std;
 
 typedef std::string gxsId;
@@ -44,9 +46,11 @@ public:
   bool addTopic(groupId topicID, groupId parentID);
   //bool addReps(groupId topicID,RepMap repMap);
   void convertAddReps(gxsIdReprMmap repMap);
+  QVariantMap *getQMap(groupId vTopic, msgVoteMmap voteMap);
+  int getLiquidQMap(gxsId voterID, groupId topicID, QVariantList &nodes, QVariantList &links, QHash<QString, int> &nodemap);
 
 
-  int getLiquidVotes(groupId vTopic,msgVoteMmap voteMap);
+  int getLiquidVotes(groupId vTopic, msgVoteMmap voteMap);
 
   int getLiquidVote(gxsId voterID, groupId topicID);
 };

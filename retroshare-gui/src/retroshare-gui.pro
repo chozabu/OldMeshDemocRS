@@ -1,4 +1,5 @@
 QT     += network xml script
+QT += webkit
 CONFIG += qt gui uic qrc resources idle bitdht
 
 greaterThan(QT_MAJOR_VERSION, 4) {
@@ -501,7 +502,8 @@ HEADERS +=  rshare.h \
     gui/MeshDemoc/MeshDemocListDialog.h \
     gui/common/RecurGroupTreeWidget.h \
     gui/MeshDemoc/SelectRepresentitiveDialog.h \
-    gui/MeshDemoc/meshdemoccachetree.h
+    gui/MeshDemoc/meshdemoccachetree.h \
+    gui/MeshDemoc/meshdemocsankeyvote.h
 
 #            gui/ForumsDialog.h \
 #            gui/forums/ForumDetails.h \
@@ -824,7 +826,8 @@ SOURCES +=  main.cpp \
     gui/MeshDemoc/MeshDemocItem.cpp \
     gui/common/RecurGroupTreeWidget.cpp \
     gui/MeshDemoc/SelectRepresentitiveDialog.cpp \
-    gui/MeshDemoc/meshdemoccachetree.cpp
+    gui/MeshDemoc/meshdemoccachetree.cpp \
+    gui/MeshDemoc/meshdemocsankeyvote.cpp
 
 #            gui/ForumsDialog.cpp \
 #            gui/forums/ForumDetails.cpp \
@@ -845,7 +848,8 @@ SOURCES +=  main.cpp \
 #            gui/settings/ForumPage.cpp \
 
 RESOURCES += gui/images.qrc lang/lang.qrc gui/help/content/content.qrc \
-    gui/MeshDemoc/MeshDemoc_images.qrc
+    gui/MeshDemoc/MeshDemoc_images.qrc \
+    gui/MeshDemoc/MeshDemoc_html.qrc
 
 TRANSLATIONS +=  \
             lang/retroshare_ca_ES.ts \
