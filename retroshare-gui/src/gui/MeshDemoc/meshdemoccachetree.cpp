@@ -1,5 +1,8 @@
 #include "meshdemoccachetree.h"
 
+#include "gui/gxs/GxsIdDetails.h"
+
+
 bool VoteCache::addTopic(groupId topicID, groupId parentID){
 
 	TopicDict::iterator ti = topicDict.find(topicID);
@@ -55,8 +58,13 @@ QVariantMap* VoteCache::getQMap(groupId vTopic, msgVoteMmap voteMap){
 		directscore+=vval;
 		directVoted.insert(item->meta.mAuthorId);
 
+
+		QString authorStr;
+		std::list<QIcon> icons;
+		GxsIdDetails::MakeIdDesc(item->meta.mAuthorId, false, authorStr, icons);
+
 		QVariantMap node;
-		node.insert("name",QString::fromStdString(item->meta.mAuthorId));
+		node.insert("name",authorStr);
 		nodes.append(node);
 
 		nodemap.insert(QString::fromStdString(item->meta.mAuthorId),nodes.size()-1);
@@ -116,8 +124,13 @@ int VoteCache::getLiquidQMap(gxsId voterID, groupId topicID, QVariantList& nodes
 			if (tp != topicDict.end())
 				topicScore+=getLiquidQMap(representee, tvc->parentId, nodes, links, nodemap);
 
+			QString authorStr;
+			std::list<QIcon> icons;
+			GxsIdDetails::MakeIdDesc(representee, false, authorStr, icons);
+
 			QVariantMap node;
-			node.insert(QString::fromStdString("name"),QString::fromStdString(representee));
+			node.insert("name",authorStr);
+
 			nodes.append(node);
 			nodemap.insert(QString::fromStdString(representee),nodes.size()-1);
 
