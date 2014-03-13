@@ -23,10 +23,11 @@ Initial TODO (in approx order):
 
 further TODO:
 
+1. ~~show visual vote/representation tree~~
 1. improve GUI
-1. show visual representation tree
 1. improve security (strong vote checking)
 2. caching - lots of it.
 3. deal with old representation items (delete?)
 4. allow vote changing? (same method as representation)
 5. Seperate into plugin
+1. show visual representation tree for a topic or in general
