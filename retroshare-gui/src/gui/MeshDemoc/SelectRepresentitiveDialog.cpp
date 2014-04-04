@@ -25,7 +25,7 @@ SelectRepresentitiveDialog::SelectRepresentitiveDialog(TokenQueue *tokenQ, RsMes
 	QObject::connect(ui->select_repr_PB,SIGNAL(clicked()),this,SLOT(createRepr())) ;
 
 	ui->friendSelectionWidget->setModus(FriendSelectionWidget::MODUS_SINGLE) ;
-	ui->friendSelectionWidget->setShowType(FriendSelectionWidget::SHOW_GPG) ;
+	ui->friendSelectionWidget->setShowType(FriendSelectionWidget::SHOW_SSL) ;
 	ui->friendSelectionWidget->setHeaderText(QObject::tr("Select your Representitive")) ;
 	ui->friendSelectionWidget->start() ;
 
