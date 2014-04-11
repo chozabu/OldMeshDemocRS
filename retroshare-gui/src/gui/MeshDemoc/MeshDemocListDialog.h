@@ -87,6 +87,7 @@ private slots:
 	void todo();
 
 	void showCurrentReprs();
+	void showTopicRepChart();
 	void showReprs(RsGxsGroupId groupId);
 	void showVotes(RsGxsGrpMsgIdPair msgID);
 	void showVoteChart(RsGxsGrpMsgIdPair msgID);
@@ -144,6 +145,8 @@ private:
 	void groupInfoToGroupItemInfo(const RsGroupMetaData &groupInfo, GroupRecurItemInfo &groupItemInfo);
 
 	void loadRequest(const TokenQueue *queue, const TokenRequest &req);
+
+
 	
 
 private:
@@ -173,8 +176,8 @@ private:
 	/* UI - from Designer */
 	Ui::MeshDemocListDialog ui;
 	void showVotesFromToken(u_int32_t token);
-	void showVoteChartFromToken(u_int32_t token);
 	void showReprsFromToken(u_int32_t token);
+	void showVoteChartFromToken(u_int32_t token);
 };
 
 #endif

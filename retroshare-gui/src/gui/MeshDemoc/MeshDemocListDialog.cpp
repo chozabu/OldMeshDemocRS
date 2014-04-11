@@ -30,6 +30,7 @@
 #include "MeshDemocUserTypes.h"
 #include "SelectRepresentitiveDialog.h"
 #include "meshdemocsankeyvote.h"
+#include "MeshDemocArrowRepMap.h"
 #include "gui/gxs/GxsIdDetails.h"
 
 #include <iostream>
@@ -80,8 +81,10 @@ MeshDemocListDialog::MeshDemocListDialog(QWidget *parent)
 	connect(ui.nextButton, SIGNAL(clicked()), this, SLOT(showNext()));
 	connect(ui.prevButton, SIGNAL(clicked()), this, SLOT(showPrev()));
 
-	connect(ui.representitiveButton, SIGNAL(clicked()), this, SLOT(newRepresentitive()));
-	ui.representitiveButton->hide();
+	//connect(ui.representitiveButton, SIGNAL(clicked()), this, SLOT(newRepresentitive()));
+	ui.representitiveButton->setText("show topic rep chart");
+	connect(ui.representitiveButton, SIGNAL(clicked()), this, SLOT(showTopicRepChart()));
+	//ui.representitiveButton->hide();
 
 	connect(ui.pushButton, SIGNAL(clicked()), this, SLOT(todo()));
 
@@ -311,6 +314,16 @@ void MeshDemocListDialog::showVoteChartFromToken(u_int32_t token)
 	msv->setVoteData(*qm);
 
 	msv->setUrl(QUrl("qrc:/html/sankeyvote.html"));
+	QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+}
+
+void MeshDemocListDialog::showTopicRepChart()
+{
+	MeshDemocArrowRepMap* marm = new MeshDemocArrowRepMap();
+	marm->show();
+	//marm->setReprData(*qm);
+
+	//marm->setUrl(QUrl("qrc:/html/sankeyvote.html"));
 	QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 }
 
