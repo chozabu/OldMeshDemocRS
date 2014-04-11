@@ -3,11 +3,11 @@
 #include "gui/gxs/GxsIdDetails.h"
 
 
-bool VoteCache::addTopic(groupId topicID, groupId parentID){
+bool VoteCache::addTopic(groupId topicID, groupId parentID, std::string topicName){
 
 	TopicDict::iterator ti = topicDict.find(topicID);
 	if (ti == topicDict.end()){
-		topicDict[topicID] = new TopicVoteCache(parentID);
+		topicDict[topicID] = new TopicVoteCache(parentID, topicName);
 	}
 }
 
@@ -85,6 +85,7 @@ QVariantMap* VoteCache::getQMap(groupId vTopic, msgVoteMmap voteMap){
 		link.insert("source",nodemap[QString::fromStdString(item->meta.mAuthorId)]);
 		link.insert("target",ynIndex);
 		link.insert("value",thisscore+1);
+		link.insert("topic",QString::fromStdString(topicDict[item->meta.mGroupId]->topicName));
 		links.append(link);
 	}
 

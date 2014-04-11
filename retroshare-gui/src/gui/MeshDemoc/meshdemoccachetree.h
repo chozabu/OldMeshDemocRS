@@ -30,9 +30,11 @@ typedef std::map<gxsId, representerTopicInfo> RepMap;
 class TopicVoteCache{
 public:
 	RepMap representerMap;
-    groupId parentId;
-  TopicVoteCache(groupId parentIn){
+	groupId parentId;
+	std::string topicName;
+  TopicVoteCache(groupId parentIn, std::string nameIn){
     parentId = parentIn;
+	topicName = nameIn;
   }
 };
 
@@ -43,7 +45,7 @@ class VoteCache{
   std::set<gxsId> directVoted;
   std::set<gxsId> liquidVoted;
 public:
-  bool addTopic(groupId topicID, groupId parentID);
+  bool addTopic(groupId topicID, groupId parentID, std::string topicName);
   //bool addReps(groupId topicID,RepMap repMap);
   void convertAddReps(gxsIdReprMmap repMap);
   QVariantMap *getQMap(groupId vTopic, msgVoteMmap voteMap);

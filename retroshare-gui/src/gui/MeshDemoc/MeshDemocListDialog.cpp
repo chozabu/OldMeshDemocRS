@@ -80,7 +80,7 @@ MeshDemocListDialog::MeshDemocListDialog(QWidget *parent)
 	connect(ui.nextButton, SIGNAL(clicked()), this, SLOT(showNext()));
 	connect(ui.prevButton, SIGNAL(clicked()), this, SLOT(showPrev()));
 
-	//connect(ui.representitiveButton, SIGNAL(clicked()), this, SLOT(newRepresentitive()));
+	connect(ui.representitiveButton, SIGNAL(clicked()), this, SLOT(newRepresentitive()));
 	ui.representitiveButton->hide();
 
 	connect(ui.pushButton, SIGNAL(clicked()), this, SLOT(todo()));
@@ -265,51 +265,11 @@ void MeshDemocListDialog::showVotesFromToken(u_int32_t token)
 	rsMeshDemoc->getRelatedVotes(token, voteMap);
 	if(voteMap.size() == 0)return;
 
-	/*QString messageString;
-	messageString.append(QString("start\n"));
-	messageString.append(QString::number(voteMap.size()));
-	messageString.append(QString(" votes \n"));*/
 
 	int score = 0;
 	RsGxsMessageId mid = voteMap.begin()->first;
-	/*msgVoteMmap::iterator it;
-	for (it = voteMap.begin(); it != voteMap.end(); it++){
-		RsGxsVoteItem* item = it->second;
-		mid = it->first;
-		gxsIdReprMmap::iterator rit;
-		std::pair<gxsIdReprMmap::iterator, gxsIdReprMmap::iterator> rits = mCurrTopicReprs.equal_range(item->meta.mAuthorId);
-
-		int mod = 1;
-		for (rit = rits.first;rit != rits.second; rit++){
-			RsMeshDemocRepr repitem = *(rit->second);
-			if(item->meta.mAuthorId.compare(repitem.mRepresenterId)==0){
-
-				messageString.append(QString(repitem.mMeta.mAuthorId.c_str()));
-				messageString.append(QString(" and "));
-				mod+=1;
-			}
-		}
-		if (item->mMsg.mVoteType == GXS_VOTE_UP)
-		{
-			messageString.append(QString(item->meta.mAuthorId.c_str()));
-			messageString.append(QString(" votes up @ "));
-			messageString.append(QString::number(item->meta.mPublishTs));
-			score+=1*mod;
-		}
-		else
-		{
-			messageString.append(QString(item->meta.mAuthorId.c_str()));
-			messageString.append(QString(" votes down @ "));
-			messageString.append(QString::number(item->meta.mPublishTs));
-			score-=1*mod;
-		}
-		messageString.append(QString("\n"));
-		messageString.append(QString("\n"));
-	}
-	messageString.append(QString("end\n"));*/
-
 	score = liquidCache.getLiquidVotes(mCurrTopicId,voteMap);
-	liquidCache.getQMap(mCurrTopicId,voteMap);
+	liquidCache.getQMap(mCurrTopicId,voteMap);//this line is not used here?
 	//QMessageBox::information(NULL, "votes!", messageString);
 
 	// modify post content
@@ -1310,7 +1270,7 @@ void MeshDemocListDialog::insertGroupData(const std::list<RsGroupMetaData> &grou
 			}
 		}
 		allList.push_back(groupItemInfo);
-		liquidCache.addTopic(it->mGroupId,it->mParentGrpId);
+		liquidCache.addTopic(it->mGroupId,it->mParentGrpId,it->mGroupName);
 	}
 
 
