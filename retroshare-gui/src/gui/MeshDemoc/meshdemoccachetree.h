@@ -55,6 +55,7 @@ public:
   int getLiquidVotes(groupId vTopic, msgVoteMmap voteMap);
 
   int getLiquidVote(gxsId voterID, groupId topicID);
+  QString getQTopicName(std::string topicID);
 };
 
 

@@ -31,6 +31,9 @@ void VoteCache::convertAddReps(gxsIdReprMmap repMap){
 	}
 }
 
+QString VoteCache::getQTopicName(std::string topicID){
+	return QString::fromStdString(topicDict[topicID]->topicName);
+}
 
 QVariantMap* VoteCache::getQMap(groupId vTopic, msgVoteMmap voteMap){
 	QVariantMap* qm = new QVariantMap();

@@ -33,7 +33,7 @@
 </style>
 <body>
 
-<h1>Vote results</h1>
+<h1 id="mTitle">Vote results</h1>
 
 <p id="chart">
 
@@ -43,6 +43,9 @@
 <script>
 
 var jsdatas = webview.getVoteData();
+
+var mTitle = document.getElementById('mTitle');
+mTitle.innerHTML = "Vote in topic: "+ jsdatas.topic;
 
 
 var margin = {top: 1, right: 1, bottom: 6, left: 1},

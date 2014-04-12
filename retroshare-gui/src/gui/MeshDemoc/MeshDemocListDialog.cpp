@@ -308,6 +308,7 @@ void MeshDemocListDialog::showVoteChartFromToken(u_int32_t token)
 	if(voteMap.size() == 0)return;
 
 	QVariantMap* qm = liquidCache.getQMap(mCurrTopicId,voteMap);
+	qm->insert("topic", liquidCache.getQTopicName(mCurrTopicId));
 
 	MeshDemocSankeyVote* msv = new MeshDemocSankeyVote();
 	msv->show();
