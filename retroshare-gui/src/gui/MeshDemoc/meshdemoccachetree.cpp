@@ -96,6 +96,7 @@ QVariantMap* VoteCache::getQMap(groupId vTopic, msgVoteMmap voteMap){
 
 int VoteCache::getLiquidQMap(gxsId voterID, groupId topicID, QVariantList& nodes, QVariantList& links, QHash<QString, int>& nodemap){
 	int topicScore=0;
+	bool addedNode = false;
 	TopicDict::iterator tv = topicDict.find(topicID);
 	TopicVoteCache *tvc = tv->second;
 	if (tv != topicDict.end()){
@@ -134,6 +135,8 @@ int VoteCache::getLiquidQMap(gxsId voterID, groupId topicID, QVariantList& nodes
 
 			nodes.append(node);
 			nodemap.insert(QString::fromStdString(representee),nodes.size()-1);
+			topicScore+=getLiquidQMap(representee, topicID, nodes, links, nodemap);
+			//should investigate and improve recursive vote counting.
 
 			QVariantMap link;
 			link.insert(QString::fromStdString("source"),nodemap[QString::fromStdString(representee)]);
