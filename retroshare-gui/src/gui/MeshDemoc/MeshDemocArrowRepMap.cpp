@@ -9,11 +9,11 @@ MeshDemocArrowRepMap::MeshDemocArrowRepMap(QWidget *parent) :
 }
 
 
-void MeshDemocArrowRepMap::setReprData(QVariantMap& repData){
-	repInfo = &repData;
+void MeshDemocArrowRepMap::setReprData(QVariantList &repData){
+	repInfo = repData;
 }
-QVariantMap MeshDemocArrowRepMap::getRepData(){
-	return (*repInfo);
+QVariantList MeshDemocArrowRepMap::getRepData(){
+	return repInfo;
 }
 
 void MeshDemocArrowRepMap::onJavaScriptWindowObjectCleared()

@@ -323,7 +323,32 @@ void MeshDemocListDialog::showTopicRepChart()
 	marm->show();
 	//marm->setReprData(*qm);
 
-	//marm->setUrl(QUrl("qrc:/html/sankeyvote.html"));
+	QVariantList links;
+
+	gxsIdReprMmap::iterator bmit = mCurrTopicReprs.begin();
+	for(; bmit != mCurrTopicReprs.end(); bmit++)
+	{
+		RsMeshDemocRepr item = *(bmit->second);
+
+
+		QString authorStr;
+		QString representerStr;
+		std::list<QIcon> icons;
+		bool loaded = GxsIdDetails::MakeIdDesc(item.mMeta.mAuthorId, false, authorStr, icons);
+		loaded &= GxsIdDetails::MakeIdDesc(item.mRepresenterId, false, representerStr, icons);
+
+		//messageString.append(QString(item.mMeta.mAuthorId.c_str()));
+		QVariantMap jsonRepr;
+		jsonRepr.insert("source", authorStr);
+		jsonRepr.insert("target", representerStr);
+		jsonRepr.insert("type", QString::fromStdString(mCurrTopicId));
+
+		links.append(jsonRepr);
+
+	}
+	marm->setReprData(links);
+
+	marm->setUrl(QUrl("qrc:/html/forcearrows.html"));
 	QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 }
 
