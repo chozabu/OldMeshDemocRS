@@ -84,7 +84,9 @@ QVariantMap* VoteCache::getQMap(groupId vTopic, msgVoteMmap voteMap){
 		QVariantMap link;
 		link.insert("source",nodemap[QString::fromStdString(item->meta.mAuthorId)]);
 		link.insert("target",ynIndex);
-		link.insert("value",thisscore+1);
+		int linkscore = thisscore+vval;
+		if (linkscore < 0) linkscore=-linkscore;
+		link.insert("value",linkscore);
 		link.insert("topic",QString::fromStdString(topicDict[item->meta.mGroupId]->topicName));
 		links.append(link);
 	}
