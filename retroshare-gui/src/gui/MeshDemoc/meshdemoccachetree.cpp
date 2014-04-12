@@ -77,6 +77,7 @@ QVariantMap* VoteCache::getQMap(groupId vTopic, msgVoteMmap voteMap){
 		std::cerr << "votemapITEM" << std::endl;
 		RsGxsVoteItem* item = it->second;
 		int vval = -1;if (item->mMsg.mVoteType == GXS_VOTE_UP) vval = 1;
+		//check for representees in super-topics
 		int thisscore = vval*getLiquidQMap(it->second->meta.mAuthorId, vTopic, nodes, links, nodemap);
 		liquidscore+=thisscore;
 
@@ -98,13 +99,13 @@ QVariantMap* VoteCache::getQMap(groupId vTopic, msgVoteMmap voteMap){
 
 int VoteCache::getLiquidQMap(gxsId voterID, groupId topicID, QVariantList& nodes, QVariantList& links, QHash<QString, int>& nodemap){
 	int topicScore=0;
-	bool addedNode = false;
 	TopicDict::iterator tv = topicDict.find(topicID);
 	TopicVoteCache *tvc = tv->second;
 	if (tv != topicDict.end()){
 		TopicDict::iterator tp = topicDict.find(tvc->parentId);
 		if (tp != topicDict.end()){
-			topicScore+=getLiquidQMap(voterID, topicDict[topicID]->parentId, nodes, links, nodemap);
+			//TODO check for representees in super-topics
+			//topicScore+=getLiquidQMap(voterID, topicDict[topicID]->parentId, nodes, links, nodemap);
 		}
 
 		if(tvc->representerMap.find(voterID) == tvc->representerMap.end()){
@@ -123,10 +124,10 @@ int VoteCache::getLiquidQMap(gxsId voterID, groupId topicID, QVariantList& nodes
 				//std::cerr << "Representee: "+representee+" already counted, skipping (check timestamps?)" << std::endl;
 				continue;
 			}
-			topicScore+=1;
+			//topicScore+=1;
 			liquidVoted.insert(representee);
-			if (tp != topicDict.end())
-				topicScore+=getLiquidQMap(representee, tvc->parentId, nodes, links, nodemap);
+			//if (tp != topicDict.end())//check for representees-representees in super-topics
+			//	topicScore+=getLiquidQMap(representee, tvc->parentId, nodes, links, nodemap);
 
 			QString authorStr;
 			std::list<QIcon> icons;
@@ -138,14 +139,16 @@ int VoteCache::getLiquidQMap(gxsId voterID, groupId topicID, QVariantList& nodes
 			if(nodemap.find(QString::fromStdString(representee)) == nodemap.end()){
 			nodes.append(node);
 			nodemap.insert(QString::fromStdString(representee),nodes.size()-1);
-			topicScore+=getLiquidQMap(representee, topicID, nodes, links, nodemap);
 			}
+			//check for representees in same topic
+			int repscore =1+getLiquidQMap(representee, topicID, nodes, links, nodemap);
+			topicScore+=repscore;
 			//should investigate and improve recursive vote counting.
 
 			QVariantMap link;
 			link.insert(QString::fromStdString("source"),nodemap[QString::fromStdString(representee)]);
 			link.insert(QString::fromStdString("target"),nodemap[QString::fromStdString(voterID)]);
-			link.insert(QString::fromStdString("value"),topicScore);
+			link.insert(QString::fromStdString("value"),repscore);
 			link.insert("topic",QString::fromStdString(topicDict[topicID]->topicName));
 			links.append(link);
 
