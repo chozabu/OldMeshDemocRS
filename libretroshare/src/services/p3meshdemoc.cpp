@@ -196,13 +196,15 @@ bool p3MeshDemoc::getRelatedReprs(const uint32_t &token, gxsIdReprMmap &reprMap)
 				{
 					RsMeshDemocRepr* msg = &(item->mPost);
 					msg->mMeta = item->meta;
+					//insert if not found, overwrite if found
 					if(backwardsReprMap.find(msg->mMeta.mAuthorId) == backwardsReprMap.end())
 					{
 						//backwardsReprMap.[msg->mMeta.mAuthorId] = &msg;
-						backwardsReprMap.insert(std::make_pair(msg->mRepresenterId, msg));
+						//backwardsReprMap.insert(std::make_pair(msg->mRepresenterId, msg));
+						backwardsReprMap.insert(std::make_pair(msg->mMeta.mAuthorId, msg));
 					} else {
 						if (msg->mMeta.mPublishTs > backwardsReprMap[msg->mMeta.mAuthorId]->mMeta.mPublishTs)
-							backwardsReprMap[msg->mMeta.mAuthorId] = msg;
+							backwardsReprMap[msg->mMeta.mAuthorId] = msg;//delete old item first?
 						else
 							delete item;
 					}
