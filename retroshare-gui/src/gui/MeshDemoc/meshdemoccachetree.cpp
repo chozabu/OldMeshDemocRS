@@ -218,6 +218,7 @@ int VoteCache::getLiquidVote(gxsId voterID, groupId topicID){
 			if (tp != topicDict.end())
 				topicScore+=getLiquidVote(representee, tvc->parentId);
 
+			topicScore+=getLiquidVote(representee, topicID);
 
 		}
 	}else{
