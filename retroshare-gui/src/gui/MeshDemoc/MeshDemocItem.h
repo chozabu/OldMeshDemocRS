@@ -53,7 +53,7 @@ private slots:
 
 signals:
 	void vote(const RsGxsGrpMsgIdPair& msgId, bool up);
-	void votesReq(const RsGxsGrpMsgIdPair& msgId);
+	void votesReq(const RsGxsGrpMsgIdPair& msgId, std::string);
 	void reprReq(const std::string reprId);
 
 protected:

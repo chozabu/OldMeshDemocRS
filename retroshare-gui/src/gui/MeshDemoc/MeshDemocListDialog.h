@@ -90,7 +90,7 @@ private slots:
 	void showTopicRepChart();
 	void showReprs(RsGxsGroupId groupId);
 	void showVotes(RsGxsGrpMsgIdPair msgID);
-	void showVoteChart(RsGxsGrpMsgIdPair msgID);
+	void showVoteChart(RsGxsGrpMsgIdPair msgID, std::string postTitle);
 	void newSubTopic();
 	void newRepresentitive();
 	void selectRepr(std::string reprId);

@@ -286,21 +286,22 @@ void MeshDemocListDialog::showVotesFromToken(u_int32_t token)
 		mPosts[mid]->setContent(p);
 	}
 }
-
+std::string lastPostTitle = "";
 //request vote information
-void MeshDemocListDialog::showVoteChart(RsGxsGrpMsgIdPair msgID)
+void MeshDemocListDialog::showVoteChart(RsGxsGrpMsgIdPair msgID, std::string postTitle)
 {
 
 	RsTokReqOptions opts;
 	opts.mReqType = GXS_REQUEST_TYPE_MSG_RELATED_DATA;
 	opts.mOptions = RS_TOKREQOPT_MSG_PARENT | RS_TOKREQOPT_MSG_LATEST;
+	lastPostTitle = postTitle;
 	std::vector<RsGxsGrpMsgIdPair> msgIds;
 	msgIds.push_back(msgID);
 	uint32_t token;
 	mMeshDemocQueue->requestMsgRelatedInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, msgIds, TOKEN_USER_TYPE_VOTE_CHART);
 }
 
-// called from loadRequest TOKENREQ_MSGRELATEDINFO - RS_TOKREQ_ANSTYPE_DATA (should change token)
+// called from loadRequest TOKEN_USER_TYPE_VOTE_CHART - RS_TOKREQ_ANSTYPE_DATA
 void MeshDemocListDialog::showVoteChartFromToken(u_int32_t token)
 {
 	msgVoteMmap voteMap;
@@ -309,6 +310,7 @@ void MeshDemocListDialog::showVoteChartFromToken(u_int32_t token)
 
 	QVariantMap* qm = liquidCache.getQMap(mCurrTopicId,voteMap);
 	qm->insert("topic", liquidCache.getQTopicName(mCurrTopicId));
+	qm->insert("title", QString::fromStdString(lastPostTitle));
 
 	MeshDemocSankeyVote* msv = new MeshDemocSankeyVote();
 	msv->show();
@@ -871,7 +873,7 @@ void MeshDemocListDialog::loadPost(const RsMeshDemocPost &post)
 {
 	MeshDemocItem *item = new MeshDemocItem(this, 0, post, true);
 	connect(item, SIGNAL(vote(RsGxsGrpMsgIdPair,bool)), this, SLOT(submitVote(RsGxsGrpMsgIdPair,bool)));
-	connect(item, SIGNAL(votesReq(RsGxsGrpMsgIdPair)), this, SLOT(showVoteChart(RsGxsGrpMsgIdPair)));
+	connect(item, SIGNAL(votesReq(RsGxsGrpMsgIdPair, std::string)), this, SLOT(showVoteChart(RsGxsGrpMsgIdPair, std::string)));
 	connect(item, SIGNAL(reprReq(std::string)), this, SLOT(selectRepr(std::string)));
 	mPosts.insert(post.mMeta.mMsgId, item);
 	//QLayout *alayout = ui.scrollAreaWidgetContents->layout();

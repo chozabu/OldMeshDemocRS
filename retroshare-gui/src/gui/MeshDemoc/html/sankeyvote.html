@@ -6,7 +6,8 @@
 
 
 #chart {
-  height: 500px;
+height: 100%;
+width: 100%;
 }
 
 .node rect {
@@ -34,6 +35,7 @@
 <body>
 
 <h1 id="mTitle">Vote results</h1>
+<h2 id="mTopic">Vote results</h2>
 
 <p id="chart">
 
@@ -45,7 +47,9 @@
 var jsdatas = webview.getVoteData();
 
 var mTitle = document.getElementById('mTitle');
-mTitle.innerHTML = "Vote in topic: "+ jsdatas.topic;
+mTitle.innerHTML = jsdatas.title;
+var mTopic = document.getElementById('mTopic');
+mTopic.innerHTML = "topic: "+ jsdatas.topic;
 
 
 var margin = {top: 1, right: 1, bottom: 6, left: 1},

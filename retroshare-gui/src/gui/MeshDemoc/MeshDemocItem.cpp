@@ -210,7 +210,7 @@ void MeshDemocItem::showVotes()
 	msgId.first = mPost.mMeta.mGroupId;
 	msgId.second = mPost.mMeta.mMsgId;
 
-	emit votesReq(msgId);
+	emit votesReq(msgId, mPost.mMeta.mMsgName);
 }
 void MeshDemocItem::selectRepr()
 {
