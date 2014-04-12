@@ -51,6 +51,17 @@ links.forEach(function(link) {
   link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
 });
 
+
+var types = {};
+var typelist = [];
+// Compute the distinct types from the links.
+links.forEach(function(link) {
+if(types[link.type] != true){
+  types[link.type] = true;
+  typelist.push(link.type);
+  }
+});
+
 var width = 960,
     height = 500;
 
@@ -69,7 +80,7 @@ var svg = d3.select("body").append("svg")
 
 // Per-type markers, as they don't inherit styles.
 svg.append("defs").selectAll("marker")
-    .data(["suit", "licensing", "resolved"])
+    .data(typelist)
   .enter().append("marker")
     .attr("id", function(d) { return d; })
     .attr("viewBox", "0 -5 10 10")
