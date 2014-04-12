@@ -104,8 +104,8 @@ int VoteCache::getLiquidQMap(gxsId voterID, groupId topicID, QVariantList& nodes
 	if (tv != topicDict.end()){
 		TopicDict::iterator tp = topicDict.find(tvc->parentId);
 		if (tp != topicDict.end()){
-			//TODO check for representees in super-topics
-			//topicScore+=getLiquidQMap(voterID, topicDict[topicID]->parentId, nodes, links, nodemap);
+			//check for representees in super-topics
+			topicScore+=getLiquidQMap(voterID, topicDict[topicID]->parentId, nodes, links, nodemap);
 		}
 
 		if(tvc->representerMap.find(voterID) == tvc->representerMap.end()){
@@ -129,16 +129,15 @@ int VoteCache::getLiquidQMap(gxsId voterID, groupId topicID, QVariantList& nodes
 			//if (tp != topicDict.end())//check for representees-representees in super-topics
 			//	topicScore+=getLiquidQMap(representee, tvc->parentId, nodes, links, nodemap);
 
-			QString authorStr;
-			std::list<QIcon> icons;
-			GxsIdDetails::MakeIdDesc(representee, false, authorStr, icons);
-
-			QVariantMap node;
-			node.insert("name",authorStr);
-
+			//add to nodes if not in list
 			if(nodemap.find(QString::fromStdString(representee)) == nodemap.end()){
-			nodes.append(node);
-			nodemap.insert(QString::fromStdString(representee),nodes.size()-1);
+				QString authorStr;
+				std::list<QIcon> icons;
+				GxsIdDetails::MakeIdDesc(representee, false, authorStr, icons);
+				QVariantMap node;
+				node.insert("name",authorStr);
+				nodes.append(node);
+				nodemap.insert(QString::fromStdString(representee),nodes.size()-1);
 			}
 			//check for representees in same topic
 			int repscore =1+getLiquidQMap(representee, topicID, nodes, links, nodemap);
@@ -224,7 +223,7 @@ int VoteCache::getLiquidVote(gxsId voterID, groupId topicID){
 			topicScore+=1;
 			liquidVoted.insert(representee);
 			if (tp != topicDict.end())
-				topicScore+=getLiquidVote(representee, tvc->parentId);
+				topicScore+=getLiquidVote(representee, tvc->parentId);//should this be removed?
 
 			topicScore+=getLiquidVote(representee, topicID);
 
