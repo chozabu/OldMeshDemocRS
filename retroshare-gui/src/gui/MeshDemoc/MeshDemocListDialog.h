@@ -88,7 +88,7 @@ private slots:
 
 	void showCurrentReprs();
 	void showTopicRepChart();
-	void showReprs(RsGxsGroupId groupId);
+	void showReprs(RsGxsGroupId groupId, bool bgParentTree);
 	void showVotes(RsGxsGrpMsgIdPair msgID);
 	void showVoteChart(RsGxsGrpMsgIdPair msgID, std::string postTitle);
 	void newSubTopic();
@@ -177,6 +177,7 @@ private:
 	Ui::MeshDemocListDialog ui;
 	void showVotesFromToken(u_int32_t token);
 	void showReprsFromToken(u_int32_t token);
+	void showBGReprsFromToken(u_int32_t token);
 	void showVoteChartFromToken(u_int32_t token);
 };
 

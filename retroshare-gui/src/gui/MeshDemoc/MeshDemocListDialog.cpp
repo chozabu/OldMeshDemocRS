@@ -446,7 +446,7 @@ void MeshDemocListDialog::showCurrentReprs()
 }
 
 //request representation information
-void MeshDemocListDialog::showReprs(RsGxsGroupId groupId)
+void MeshDemocListDialog::showReprs(RsGxsGroupId groupId, bool bgParentTree)
 {
 	RsTokReqOptions opts;
 
@@ -460,7 +460,7 @@ void MeshDemocListDialog::showReprs(RsGxsGroupId groupId)
 	std::cerr << std::endl;
 
 	uint32_t token;
-	mMeshDemocQueue->requestMsgInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, grpIds, TOKEN_USER_TYPE_REPR);
+	mMeshDemocQueue->requestMsgInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, grpIds, bgParentTree?TOKEN_USER_TYPE_REPR_BG:TOKEN_USER_TYPE_REPR);
 }
 
 //called from loadRequest for TOKEN_USER_TYPE_REPR - RS_TOKREQ_ANSTYPE_DATA
@@ -470,6 +470,13 @@ void MeshDemocListDialog::showReprsFromToken(u_int32_t token)
 	rsMeshDemoc->getRelatedReprs(token, reprMap);
 	mCurrTopicReprs = reprMap;
 	liquidCache.convertAddReps(reprMap);
+
+	if(reprMap.size()){
+		RsMeshDemocRepr firstItem = *(mCurrTopicReprs.begin()->second);
+		std::string parentId = liquidCache.getTopicParent(firstItem.mMeta.mGroupId);
+		if(parentId.length()>5)
+			showReprs(parentId,true);
+	}
 
 	RsGxsId authorId;
 	if (!ui.idChooser->getChosenId(authorId)){}
@@ -487,6 +494,22 @@ void MeshDemocListDialog::showReprsFromToken(u_int32_t token)
 				ui.representitiveLabel->setText(QString(desc));
 			}
 	}
+}
+
+//called from loadRequest for TOKEN_USER_TYPE_REPR_BG_ - RS_TOKREQ_ANSTYPE_DATA
+void MeshDemocListDialog::showBGReprsFromToken(u_int32_t token)
+{
+	gxsIdReprMmap reprMap;
+	rsMeshDemoc->getRelatedReprs(token, reprMap);
+	liquidCache.convertAddReps(reprMap);
+
+	if(reprMap.size()){
+		RsMeshDemocRepr firstItem = *(mCurrTopicReprs.begin()->second);
+		std::string parentId = liquidCache.getTopicParent(firstItem.mMeta.mGroupId);
+		if(parentId.length()>5)
+			showReprs(parentId,true);
+	}
+
 }
 
 void MeshDemocListDialog::newPost()
@@ -655,7 +678,7 @@ void MeshDemocListDialog::changedTopic(const QString &id)
 	ui.representitiveLabel->setText(QString("loading..."));
 	mCurrTopicId = id.toStdString();
 	insertThreads();
-	showReprs(mCurrTopicId);
+	showReprs(mCurrTopicId, false);
 }
 
 /*********************** **** **** **** ***********************/

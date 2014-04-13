@@ -25,7 +25,7 @@ void VoteCache::convertAddReps(gxsIdReprMmap repMap){
 			if (repi == tvc->representerMap.end()){
 				tvc->representerMap[item.mRepresenterId] = representerTopicInfo();//(item.mRepresenterId);
 			}
-			tvc->representerMap[item.mRepresenterId].representees[item.mMeta.mAuthorId] = 1;//use timestamp, eh?
+			tvc->representerMap[item.mRepresenterId].representees[item.mMeta.mAuthorId] = 1;//TODO check and store timestamp
 		}
 
 	}
