@@ -3,20 +3,19 @@
 
 #include <QWebView>
 #include <QVariantMap>
-#include <QVariantList>
 
 class MeshDemocArrowRepMap : public QWebView
 {
 	Q_OBJECT
 public:
 	explicit MeshDemocArrowRepMap(QWidget *parent = 0);
-	void setReprData(QVariantList &repData);
+	void setReprData(QVariantMap &repData);
 	//void showVoteData();
-	QVariantList repInfo;
+	QVariantMap* repInfo;
 
 public slots:
     void onJavaScriptWindowObjectCleared();
-	QVariantList getRepData();
+	QVariantMap getRepData();
 
 };
 

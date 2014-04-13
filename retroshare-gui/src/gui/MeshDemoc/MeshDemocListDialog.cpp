@@ -338,6 +338,7 @@ void MeshDemocListDialog::showTopicRepChart()
 	//marm->setReprData(*qm);
 
 	QVariantList links;
+	QVariantMap* reprData = new QVariantMap();
 
 	gxsIdReprMmap::iterator bmit = mCurrTopicReprs.begin();
 	for(; bmit != mCurrTopicReprs.end(); bmit++)
@@ -360,10 +361,25 @@ void MeshDemocListDialog::showTopicRepChart()
 		links.append(jsonRepr);
 
 	}
-	marm->setReprData(links);
+	reprData->insert("links", links);
+
+	reprData->insert("topic", liquidCache.getQTopicName(mCurrTopicId));
+
+	QVariantList topics;
+	std::string topic = liquidCache.getTopicParent(mCurrTopicId);
+	while(topic.length()>5){
+		topics.append(liquidCache.getQTopicName(topic));
+		topic = liquidCache.getTopicParent(topic);
+
+	}
+	reprData->insert("topics", topics);
+
+	marm->setReprData(*reprData);
+
+	QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+
 
 	marm->setUrl(QUrl("qrc:/html/forcearrows.html"));
-	QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 }
 
 //publish new representation token for current group

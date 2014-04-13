@@ -34,6 +34,8 @@ text {
 
 </style>
 <body>
+<h1 id="mTitle">Representation</h1>
+<h2 id="mTopic">Vote results</h2>
 <script src="d3.v2.min.js"></script>
 <script>
 
@@ -41,9 +43,17 @@ text {
 
 
 
-var links = webview.getRepData();
+var repData = webview.getRepData();
+var links = repData.links;
 
 var nodes = {};
+
+var mTopic = document.getElementById('mTopic');
+mTopic.innerHTML = ""
+for (var t in repData.topics.reverse()){
+    mTopic.innerHTML += repData.topics[t]+"/"
+}
+mTopic.innerHTML += "<b>"+ repData.topic+"<b";
 
 // Compute the distinct nodes from the links.
 links.forEach(function(link) {
