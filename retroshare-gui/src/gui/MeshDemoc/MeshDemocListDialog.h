@@ -150,7 +150,6 @@ private:
 	
 
 private:
-	QTreeWidgetItem *yourTopics;
 	QTreeWidgetItem *subscribedTopics;
 	QTreeWidgetItem *allTopics;
 

@@ -102,7 +102,6 @@ MeshDemocListDialog::MeshDemocListDialog(QWidget *parent)
 	ui.groupTreeWidget->addToolButton(newTopicButton);
 
 	/* create posted tree */
-	yourTopics = ui.groupTreeWidget->addCategoryItem(tr("My Topics"), QIcon(IMAGE_FOLDER), true);
 	subscribedTopics = ui.groupTreeWidget->addCategoryItem(tr("Subscribed Topics"), QIcon(IMAGE_FOLDERRED), true);
 	allTopics = ui.groupTreeWidget->addCategoryItem(tr("All Topics"), QIcon(IMAGE_FOLDERYELLOW), false);
 
@@ -1389,7 +1388,6 @@ void MeshDemocListDialog::insertGroupData(const std::list<RsGroupMetaData> &grou
 {
 	std::list<RsGroupMetaData>::const_iterator it;
 
-	QList<GroupRecurItemInfo> adminList;
 	QList<GroupRecurItemInfo> subList;
 	QList<GroupRecurItemInfo> allList;
 	//std::multimap<uint32_t, GroupRecurItemInfo> popMap;
@@ -1404,14 +1402,7 @@ void MeshDemocListDialog::insertGroupData(const std::list<RsGroupMetaData> &grou
 
 		if (IS_GROUP_SUBSCRIBED(flags))
 		{
-			if (IS_GROUP_ADMIN(flags) || IS_GROUP_PUBLISHER(flags))
-			{
-				adminList.push_back(groupItemInfo);
-			}
-			else
-			{
 				subList.push_back(groupItemInfo);
-			}
 		}
 		allList.push_back(groupItemInfo);
 		liquidCache.addTopic(it->mGroupId,it->mParentGrpId,it->mGroupName);
@@ -1419,7 +1410,6 @@ void MeshDemocListDialog::insertGroupData(const std::list<RsGroupMetaData> &grou
 
 
 	/* now we can add them in as a tree! */
-	ui.groupTreeWidget->fillGroupItems(yourTopics, adminList);
 	ui.groupTreeWidget->fillGroupItems(subscribedTopics, subList);
 	ui.groupTreeWidget->fillGroupItems(allTopics, allList);
 }
