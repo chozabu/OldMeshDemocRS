@@ -50,7 +50,7 @@ var mTitle = document.getElementById('mTitle');
 mTitle.innerHTML = jsdatas.title;
 var mTopic = document.getElementById('mTopic');
 mTopic.innerHTML = ""
-for (var t in jsdatas.topics){
+for (var t in jsdatas.topics.reverse()){
     mTopic.innerHTML += jsdatas.topics[t]+"/"
 }
 mTopic.innerHTML += "<b>"+ jsdatas.topic+"<b";
