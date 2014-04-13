@@ -31,12 +31,29 @@ void VoteCache::convertAddReps(gxsIdReprMmap repMap){
 	}
 }
 
+RepMap VoteCache::getRepMap(groupId vTopic){
+	TopicDict::iterator tv = topicDict.find(vTopic);
+	TopicVoteCache *tvc = tv->second;
+	return tvc->representerMap;
+}
+
 QString VoteCache::getQTopicName(std::string topicID){
 	return QString::fromStdString(topicDict[topicID]->topicName);
 }
 
 std::string VoteCache::getTopicParent(std::string topicID){
 	return topicDict[topicID]->parentId;
+}
+
+std::list<std::string> VoteCache::getTopicAndParents(std::string topicID){
+	std::list<std::string> topics;
+	topics.push_back(topicID);
+	std::string topic = topicDict[topicID]->parentId;
+	while(topic.length()>5){
+		topics.push_back(topic);
+		topic = getTopicParent(topic);
+	}
+	return topics;
 }
 
 

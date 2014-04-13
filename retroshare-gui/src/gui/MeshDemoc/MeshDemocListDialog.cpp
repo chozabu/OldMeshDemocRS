@@ -337,9 +337,39 @@ void MeshDemocListDialog::showTopicRepChart()
 	marm->show();
 	//marm->setReprData(*qm);
 
+	std::list<QIcon> icons;
 	QVariantList links;
 	QVariantMap* reprData = new QVariantMap();
 
+
+	std::list<std::string> stdtopics = liquidCache.getTopicAndParents(mCurrTopicId);
+	std::list<std::string>::iterator topicIt = stdtopics.begin();
+	for(; topicIt != stdtopics.end(); topicIt++){
+		std::string topicstr = (*topicIt);
+		RepMap r = liquidCache.getRepMap(topicstr);
+		RepMap::iterator representorIt = r.begin();
+		for(; representorIt != r.end(); representorIt++){
+			representerTopicInfo rti = representorIt->second;
+
+			rti.representees.begin();
+			RepTeeMap::iterator rtiIT = rti.representees.begin();
+			for(; rtiIT != rti.representees.end(); rtiIT++){
+				//rtiIT.;
+				QString authorStr;
+				GxsIdDetails::MakeIdDesc(rtiIT->first, false, authorStr, icons);
+				QString representerStr;
+				GxsIdDetails::MakeIdDesc(representorIt->first, false, representerStr, icons);
+
+				//messageString.append(QString(item.mMeta.mAuthorId.c_str()));
+				QVariantMap jsonRepr;
+				jsonRepr.insert("source", authorStr);
+				jsonRepr.insert("target", representerStr);
+				jsonRepr.insert("type", QString::fromStdString(topicstr));
+
+				links.append(jsonRepr);
+			}
+		}
+	}
 	gxsIdReprMmap::iterator bmit = mCurrTopicReprs.begin();
 	for(; bmit != mCurrTopicReprs.end(); bmit++)
 	{

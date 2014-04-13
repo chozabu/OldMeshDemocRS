@@ -54,9 +54,13 @@ public:
 
   int getLiquidVotes(groupId vTopic, msgVoteMmap voteMap);
 
+
+  RepMap getRepMap(groupId vTopic);
+
   int getLiquidVote(gxsId voterID, groupId topicID);
   QString getQTopicName(std::string topicID);
   std::string getTopicParent(std::string topicID);
+  std::list<string> getTopicAndParents(std::string topicID);
 };
 
 

@@ -4,7 +4,6 @@
 
 .link {
   fill: none;
-  stroke: #666;
   stroke-width: 1.5px;
 }
 
@@ -42,6 +41,7 @@ text {
 // removed http://blog.thomsonreuters.com/index.php/mobile-patent-suits-graphic-of-the-day/
 
 
+var color = d3.scale.category10();
 
 var repData = webview.getRepData();
 var links = repData.links;
@@ -106,7 +106,9 @@ var path = svg.append("g").selectAll("path")
     .data(force.links())
   .enter().append("path")
     .attr("class", function(d) { return "link " + d.type; })
-    .attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
+    .attr("marker-end", function(d) { return "url(#" + d.type + ")"; })
+    .style("stroke", function(d) { return color(d.type); });
+    //.style("fill", function(d) { return color(d.type); });
 
 var circle = svg.append("g").selectAll("circle")
     .data(force.nodes())
