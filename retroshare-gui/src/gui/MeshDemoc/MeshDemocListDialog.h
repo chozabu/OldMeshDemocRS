@@ -159,8 +159,10 @@ private:
 	int	mPostIndex;
 	int	mPostShow;
 
+
 	bool mThreadLoading;
 	RsGxsGroupId mCurrTopicId;
+	RsGxsGroupId mLastTopicLoaded;
 	gxsIdReprMmap mCurrTopicReprs;
 
 	VoteCache liquidCache;

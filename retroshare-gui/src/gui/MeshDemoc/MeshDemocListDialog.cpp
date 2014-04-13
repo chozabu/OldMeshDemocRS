@@ -460,7 +460,8 @@ void MeshDemocListDialog::showReprs(RsGxsGroupId groupId, bool bgParentTree)
 	std::cerr << std::endl;
 
 	uint32_t token;
-	mMeshDemocQueue->requestMsgInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, grpIds, bgParentTree?TOKEN_USER_TYPE_REPR_BG:TOKEN_USER_TYPE_REPR);
+	int fType = bgParentTree?TOKEN_USER_TYPE_REPR_BG:TOKEN_USER_TYPE_REPR;
+	mMeshDemocQueue->requestMsgInfo(token, RS_TOKREQ_ANSTYPE_DATA, opts, grpIds, fType);
 }
 
 //called from loadRequest for TOKEN_USER_TYPE_REPR - RS_TOKREQ_ANSTYPE_DATA
@@ -469,13 +470,13 @@ void MeshDemocListDialog::showReprsFromToken(u_int32_t token)
 	gxsIdReprMmap reprMap;
 	rsMeshDemoc->getRelatedReprs(token, reprMap);
 	mCurrTopicReprs = reprMap;
+	mLastTopicLoaded = mCurrTopicId;
 	liquidCache.convertAddReps(reprMap);
 
-	if(reprMap.size()){
-		RsMeshDemocRepr firstItem = *(mCurrTopicReprs.begin()->second);
-		std::string parentId = liquidCache.getTopicParent(firstItem.mMeta.mGroupId);
-		if(parentId.length()>5)
-			showReprs(parentId,true);
+	std::string parentId = liquidCache.getTopicParent(mLastTopicLoaded);
+	if(parentId.length()>5){
+		mLastTopicLoaded = parentId;
+		showReprs(parentId,true);
 	}
 
 	RsGxsId authorId;
@@ -496,18 +497,17 @@ void MeshDemocListDialog::showReprsFromToken(u_int32_t token)
 	}
 }
 
-//called from loadRequest for TOKEN_USER_TYPE_REPR_BG_ - RS_TOKREQ_ANSTYPE_DATA
+//called from loadRequest for TOKEN_USER_TYPE_REPR_BG - RS_TOKREQ_ANSTYPE_DATA
 void MeshDemocListDialog::showBGReprsFromToken(u_int32_t token)
 {
 	gxsIdReprMmap reprMap;
 	rsMeshDemoc->getRelatedReprs(token, reprMap);
 	liquidCache.convertAddReps(reprMap);
 
-	if(reprMap.size()){
-		RsMeshDemocRepr firstItem = *(mCurrTopicReprs.begin()->second);
-		std::string parentId = liquidCache.getTopicParent(firstItem.mMeta.mGroupId);
-		if(parentId.length()>5)
-			showReprs(parentId,true);
+	std::string parentId = liquidCache.getTopicParent(mLastTopicLoaded);
+	if(parentId.length()>5){
+		mLastTopicLoaded = parentId;
+		showReprs(parentId,true);
 	}
 
 }
@@ -1218,6 +1218,19 @@ void MeshDemocListDialog::loadRequest(const TokenQueue *queue, const TokenReques
 					break;
 				case RS_TOKREQ_ANSTYPE_DATA:
 					showReprsFromToken(req.mToken);
+					break;
+				default:
+					std::cerr << "Error, unexpected anstype:" << req.mAnsType << std::endl;
+					break;
+			}
+		case TOKEN_USER_TYPE_REPR_BG:
+			switch(req.mAnsType)
+			{
+				case RS_TOKREQ_ANSTYPE_ACK:
+					acknowledgePostMsg(req.mToken);
+					break;
+				case RS_TOKREQ_ANSTYPE_DATA:
+					showBGReprsFromToken(req.mToken);
 					break;
 				default:
 					std::cerr << "Error, unexpected anstype:" << req.mAnsType << std::endl;
