@@ -370,7 +370,7 @@ void MeshDemocListDialog::showTopicRepChart()
 			}
 		}
 	}
-	gxsIdReprMmap::iterator bmit = mCurrTopicReprs.begin();
+	/*gxsIdReprMmap::iterator bmit = mCurrTopicReprs.begin();
 	for(; bmit != mCurrTopicReprs.end(); bmit++)
 	{
 		RsMeshDemocRepr item = *(bmit->second);
@@ -390,17 +390,27 @@ void MeshDemocListDialog::showTopicRepChart()
 
 		links.append(jsonRepr);
 
-	}
+	}*/
 	reprData->insert("links", links);
 
-	reprData->insert("topic", liquidCache.getQTopicName(mCurrTopicId));
 
 	QVariantList topics;
+
+	QVariantMap atp;
+	atp.insert("id",QString::fromStdString(mCurrTopicId));
+	atp.insert("name",liquidCache.getQTopicName(mCurrTopicId));
+	topics.append(atp);
+	reprData->insert("topic", liquidCache.getQTopicName(mCurrTopicId));
+
 	std::string topic = liquidCache.getTopicParent(mCurrTopicId);
 	while(topic.length()>5){
-		topics.append(liquidCache.getQTopicName(topic));
-		topic = liquidCache.getTopicParent(topic);
+		//topics.append(liquidCache.getQTopicName(topic));
+		QVariantMap atp;
+		atp.insert("id",QString::fromStdString(topic));
+		atp.insert("name",liquidCache.getQTopicName(topic));
+		topics.append(atp);
 
+		topic = liquidCache.getTopicParent(topic);
 	}
 	reprData->insert("topics", topics);
 

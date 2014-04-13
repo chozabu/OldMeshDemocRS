@@ -31,6 +31,13 @@ text {
   text-shadow: 0 1px 0 #fff, 2px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
 }
 
+            .legend {
+                    padding: 5px;
+                    font: 13px sans-serif;
+                    background: yellow;
+                    box-shadow: 2px 2px 1px #888;
+            }
+
 </style>
 <body>
 <h1 id="mTitle">Representation</h1>
@@ -49,27 +56,19 @@ var links = repData.links;
 var nodes = {};
 
 var mTopic = document.getElementById('mTopic');
+var topicsList = []
 mTopic.innerHTML = ""
 for (var t in repData.topics.reverse()){
-    mTopic.innerHTML += repData.topics[t]+"/"
+    mTopic.innerHTML += "/"+repData.topics[t].name
+    topicsList.push(repData.topics[t]);
 }
-mTopic.innerHTML += "<b>"+ repData.topic+"<b";
+//topicsList.push(repData.topic);
+//mTopic.innerHTML += "<b>"+ repData.topic+"<b";
 
 // Compute the distinct nodes from the links.
 links.forEach(function(link) {
   link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
   link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
-});
-
-
-var types = {};
-var typelist = [];
-// Compute the distinct types from the links.
-links.forEach(function(link) {
-if(types[link.type] != true){
-  types[link.type] = true;
-  typelist.push(link.type);
-  }
 });
 
 var width = 960,
@@ -88,11 +87,42 @@ var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
 
+        // add legend
+        var legend = svg.append("g")
+          .attr("class", "legend")
+        //.attr("x", w - 65)
+        //.attr("y", 50)
+          .attr("height", 100)
+          .attr("width", 100)
+    .attr('transform', 'translate(-20,50)')
+
+
+    legend.selectAll('rect')
+      .data(topicsList)
+      .enter()
+      .append("rect")
+          .attr("x", 20)
+      .attr("y", function(d, i){ return i *  20;})
+          .attr("width", 10)
+          .attr("height", 10)
+  .style("fill", function(d) { return color(d.id); })
+  .style("stroke", function(d) { return color(d.id); });
+
+    legend.selectAll('text')
+      .data(topicsList)
+      .enter()
+      .append("text")
+          .attr("x", 35)
+      .attr("y", function(d, i){ return i *  20 + 9;})
+          .text(function(d) {
+        return d.name;
+      });
+
 // Per-type markers, as they don't inherit styles.
 svg.append("defs").selectAll("marker")
-    .data(typelist)
+    .data(topicsList)
   .enter().append("marker")
-    .attr("id", function(d) { return d; })
+    .attr("id", function(d) { return d.id; })
     .attr("viewBox", "0 -5 10 10")
     .attr("refX", 15)
     .attr("refY", -1.5)
