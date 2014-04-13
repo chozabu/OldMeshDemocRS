@@ -26,9 +26,9 @@ circle {
 }
 
 text {
-  font: 10px sans-serif;
+  font: 13px sans-serif;
   pointer-events: none;
-  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+  text-shadow: 0 1px 0 #fff, 2px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
 }
 
 </style>
@@ -79,8 +79,8 @@ var force = d3.layout.force()
     .nodes(d3.values(nodes))
     .links(links)
     .size([width, height])
-    .linkDistance(60)
-    .charge(-300)
+    .linkDistance(100)
+    .charge(-500)
     .on("tick", tick)
     .start();
 
