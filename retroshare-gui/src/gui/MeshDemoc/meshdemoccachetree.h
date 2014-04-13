@@ -56,6 +56,7 @@ public:
 
   int getLiquidVote(gxsId voterID, groupId topicID);
   QString getQTopicName(std::string topicID);
+  std::string getTopicParent(std::string topicID);
 };
 
 

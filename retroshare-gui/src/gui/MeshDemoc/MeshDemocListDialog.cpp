@@ -314,6 +314,15 @@ void MeshDemocListDialog::showVoteChartFromToken(u_int32_t token)
 	qm->insert("topic", liquidCache.getQTopicName(mCurrTopicId));
 	qm->insert("title", QString::fromStdString(lastPostTitle));
 
+	QVariantList topics;
+	std::string topic = liquidCache.getTopicParent(mCurrTopicId);
+	while(topic.length()>5){
+		topics.append(liquidCache.getQTopicName(topic));
+		topic = liquidCache.getTopicParent(topic);
+
+	}
+	qm->insert("topics", topics);
+
 	MeshDemocSankeyVote* msv = new MeshDemocSankeyVote();
 	msv->show();
 	msv->setVoteData(*qm);

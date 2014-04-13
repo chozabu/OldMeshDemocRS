@@ -49,7 +49,11 @@ var jsdatas = webview.getVoteData();
 var mTitle = document.getElementById('mTitle');
 mTitle.innerHTML = jsdatas.title;
 var mTopic = document.getElementById('mTopic');
-mTopic.innerHTML = "topic: "+ jsdatas.topic;
+mTopic.innerHTML = ""
+for (var t in jsdatas.topics){
+    mTopic.innerHTML += jsdatas.topics[t]+"/"
+}
+mTopic.innerHTML += "<b>"+ jsdatas.topic+"<b";
 
 
 var margin = {top: 1, right: 1, bottom: 6, left: 1},

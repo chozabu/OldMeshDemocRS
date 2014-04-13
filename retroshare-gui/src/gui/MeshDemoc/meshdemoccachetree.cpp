@@ -35,6 +35,11 @@ QString VoteCache::getQTopicName(std::string topicID){
 	return QString::fromStdString(topicDict[topicID]->topicName);
 }
 
+std::string VoteCache::getTopicParent(std::string topicID){
+	return topicDict[topicID]->parentId;
+}
+
+
 QVariantMap* VoteCache::getQMap(groupId vTopic, msgVoteMmap voteMap){
 	QVariantMap* qm = new QVariantMap();
 	QVariantList nodes;
