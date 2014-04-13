@@ -42,6 +42,7 @@ QString VoteCache::getQTopicName(std::string topicID){
 }
 
 std::string VoteCache::getTopicParent(std::string topicID){
+	if (topicDict.find(topicID) == topicDict.end())return "";
 	return topicDict[topicID]->parentId;
 }
 
