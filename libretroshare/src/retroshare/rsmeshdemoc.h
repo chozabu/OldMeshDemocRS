@@ -120,6 +120,8 @@ class RsMeshDemocPost
 	// and Calculated Scores:???
 	double  mHotScore;
 	double  mTopScore;
+	double  mDirectScore;
+	double  mLiquidScore;
 	double  mNewScore;
 };
 

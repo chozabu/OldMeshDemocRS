@@ -105,8 +105,13 @@ void MeshDemocItem::setContent(const RsMeshDemocPost &post)
 	//score += " New" + QString::number(post.mNewScore);
 
 	QString score = QString::number(post.mTopScore);
-
 	scoreLabel->setText(score); 
+
+	QString dscore = QString::number(post.mDirectScore);
+	directScoreLabel->setText(dscore);
+
+	QString lscore = QString::number(post.mLiquidScore);
+	liquidScoreLabel->setText(lscore);
 
 	// FIX THIS UP LATER.
 	notes->setText(QString::fromUtf8(post.mNotes.c_str()));

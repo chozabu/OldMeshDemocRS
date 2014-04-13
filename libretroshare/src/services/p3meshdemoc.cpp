@@ -312,6 +312,8 @@ bool RsMeshDemocPost::calculateScores(time_t ref_time)
 #define POSTED_AGEFACTOR (3600.0)
 
 	mTopScore = ((int) mUpVotes - (int) mDownVotes);
+	mDirectScore = ((int) mUpVotes - (int) mDownVotes);
+	mLiquidScore = 0;
 	if (mTopScore > 0)
 	{
 		// score drops with time.

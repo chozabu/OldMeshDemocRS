@@ -279,7 +279,9 @@ void MeshDemocListDialog::showVotesFromToken(u_int32_t token)
 	if(mPosts.find(mid) != mPosts.end())
 	{
 		RsMeshDemocPost p = *(mPosts[mid]->getContent());
+		p.mDirectScore = p.mTopScore;
 		p.mTopScore = score;
+		p.mLiquidScore = score - p.mDirectScore;
 		std::cerr << "MeshDemocListDialog::updateCurrentDisplayComplete() updating MsgId: " << p.mMeta.mMsgId;
 		std::cerr << std::endl;
 
