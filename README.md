@@ -30,4 +30,4 @@ further TODO:
 3. deal with old representation items (delete?)
 4. allow vote changing? (same method as representation)
 5. Seperate into plugin
-1. show visual representation tree for a topic or in general
+1. ~~show visual representation tree for a topic~~ or in general
