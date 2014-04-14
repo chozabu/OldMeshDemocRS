@@ -32,7 +32,7 @@
 #include "meshdemocsankeyvote.h"
 #include "MeshDemocArrowRepMap.h"
 #include "gui/gxs/GxsIdDetails.h"
-
+#include "MeshDemocWebView.h"
 #include <iostream>
 
 #include <QMenu>
@@ -322,9 +322,9 @@ void MeshDemocListDialog::showVoteChartFromToken(u_int32_t token)
 	}
 	qm->insert("topics", topics);
 
-	MeshDemocSankeyVote* msv = new MeshDemocSankeyVote();
+	MeshDemocWebView* msv = new MeshDemocWebView();
 	msv->show();
-	msv->setVoteData(*qm);
+	msv->setPayLoad(*qm);
 
 	msv->setUrl(QUrl("qrc:/html/sankeyvote.html"));
 	QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
@@ -332,9 +332,8 @@ void MeshDemocListDialog::showVoteChartFromToken(u_int32_t token)
 
 void MeshDemocListDialog::showTopicRepChart()
 {
-	MeshDemocArrowRepMap* marm = new MeshDemocArrowRepMap();
+	MeshDemocWebView* marm = new MeshDemocWebView();
 	marm->show();
-	//marm->setReprData(*qm);
 
 	std::list<QIcon> icons;
 	QVariantList links;
@@ -413,7 +412,7 @@ void MeshDemocListDialog::showTopicRepChart()
 	}
 	reprData->insert("topics", topics);
 
-	marm->setReprData(*reprData);
+	marm->setPayLoad(*reprData);
 
 	QWebSettings::globalSettings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 
